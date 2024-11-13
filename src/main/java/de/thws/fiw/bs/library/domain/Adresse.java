@@ -6,4 +6,3 @@ public class Adresse {
     String pzl;
     String stadt;
 }
-// terstestsetteeeeeeeestetsedgaizwdvd
