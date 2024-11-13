@@ -12,7 +12,7 @@ public class Buch {
     int seitenanzahl;
     int kosten;
     LocalDate veröffentlichungsdatum;
-    boolean ausgeliehen;
+    Ausleihe ausgeliehen;
     Reservierung reservierung;
     double preis;
 }

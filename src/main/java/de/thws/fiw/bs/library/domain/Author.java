@@ -4,5 +4,4 @@ public class Author {
     long id;
     String vorname;
     String nachname;
-
 }
