@@ -15,4 +15,5 @@ public class Buch {
     Ausleihe ausgeliehen;
     Reservierung reservierung;
     double preis;
+    int ausleiheVerlängert;
 }
