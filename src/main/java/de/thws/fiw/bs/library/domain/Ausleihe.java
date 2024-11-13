@@ -1,4 +1,4 @@
-package main.java.de.thws.fiw.bs.library.domain;
+package de.thws.fiw.bs.library.domain;
 
 import java.time.LocalDate;
 
