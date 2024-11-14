@@ -1,6 +1,7 @@
 package de.thws.fiw.bs.library.domain;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Buch {
     long id;
@@ -8,7 +9,7 @@ public class Buch {
     String genre;
     String beschreibung;
     int isbn;
-    Author author;
+    List<Author> authoren;
     int seitenanzahl;
     int kosten;
     LocalDate veröffentlichungsdatum;
