@@ -1,20 +1,23 @@
-package de.thws.fiw.bs.library.domain;
+package de.thws.fiw.bs.library.domain.model;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class Book {
     private Long id;
     private String title;
-    private String author;
     private String isbn;
     private boolean isAvailable;
+    private String genre;
+    private Set<Author> authors;
 
-    public Book(Long id, String title, String author, String isbn, boolean isAvailable) {
+    public Book(Long id, String title, String isbn, boolean isAvailable, String genre, Set<Author> authors) {
         this.id = id;
         this.title = title;
-        this.author = author;
         this.isbn = isbn;
         this.isAvailable = isAvailable;
+        this.genre = genre;
+        this.authors = authors;
     }
 
     // Getter und Setter
@@ -34,14 +37,6 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getIsbn() {
         return isbn;
     }
@@ -56,6 +51,22 @@ public class Book {
 
     public void setAvailable(boolean available) {
         isAvailable = available;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
     }
 
     @Override
