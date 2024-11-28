@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-    User save(User user); // Speichert einen Nutzer
+    User save(User user);
 
-    void delete(Long id); // Löscht einen Nutzer
+    void delete(Long id);
 
-    Optional<User> findById(Long id); // Sucht einen Nutzer anhand der ID
+    Optional<User> findById(Long id);
 
-    List<User> findAll(); // Gibt alle Nutzer zurück
+    List<User> findAll();
 }

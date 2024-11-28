@@ -5,9 +5,9 @@ import java.util.List;
 import de.thws.fiw.bs.library.domain.model.Reservation;
 
 public interface ReservationRepository {
-    Reservation save(Reservation reservation); // Reservierung speichern
+    Reservation save(Reservation reservation);
 
-    void delete(Long id); // Reservierung löschen
+    void delete(Long id);
 
-    List<Reservation> findByUserId(Long userId); // Reservierungen eines Nutzers finden
+    List<Reservation> findByUserId(Long userId);
 }

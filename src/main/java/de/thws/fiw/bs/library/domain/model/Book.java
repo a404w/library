@@ -19,7 +19,6 @@ public class Book {
         this.isAvailable = isAvailable;
     }
 
-    // Getter und Setter
     public Long getId() {
         return id;
     }
