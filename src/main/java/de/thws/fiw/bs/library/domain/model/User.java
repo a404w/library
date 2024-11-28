@@ -1,18 +1,18 @@
 package de.thws.fiw.bs.library.domain.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 public class User {
     private Long id;
     private String name;
     private String email;
-    private List<Book> borrowedBooks = new ArrayList<>();
+    private Set<Book> borrowedBooks;
 
-    public User(Long id, String name, String email) {
+    public User(Long id, String name, String email, Set<Book> borrowedBooks) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.borrowedBooks = borrowedBooks;
     }
 
     // Getter und Setter
@@ -40,15 +40,11 @@ public class User {
         this.email = email;
     }
 
-    public List<Book> getBorrowedBooks() {
+    public Set<Book> getBorrowedBooks() {
         return borrowedBooks;
     }
 
-    public void addBorrowedBook(Book book) {
-        this.borrowedBooks.add(book);
-    }
-
-    public void removeBorrowedBook(Book book) {
-        this.borrowedBooks.remove(book);
+    public void setBorrowedBooks(Set<Book> borrowedBooks) {
+        this.borrowedBooks = borrowedBooks;
     }
 }

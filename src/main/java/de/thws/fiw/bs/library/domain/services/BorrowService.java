@@ -14,7 +14,6 @@ public class BorrowService {
         this.userRepository = userRepository;
     }
 
-    // Buch ausleihen
     public void borrowBook(Long bookId, Long userId) {
         Book book = bookRepository.findById(bookId);
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -24,7 +23,7 @@ public class BorrowService {
         }
 
         book.setAvailable(false);
-        user.addBorrowedBook(book);
+        user.getBorrowedBooks().add(book);
 
         bookRepository.save(book);
         userRepository.save(user);

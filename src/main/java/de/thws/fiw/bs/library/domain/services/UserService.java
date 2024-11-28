@@ -1,9 +1,10 @@
 package de.thws.fiw.bs.library.domain.services;
 
-import java.util.Optional;
-
 import de.thws.fiw.bs.library.domain.model.User;
 import de.thws.fiw.bs.library.domain.ports.UserRepository;
+
+import java.util.List;
+import java.util.Optional;
 
 public class UserService {
     private final UserRepository userRepository;
@@ -12,18 +13,19 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    // Nutzer registrieren
-    public User registerUser(User user) {
+    public User addUser(User user) {
         return userRepository.save(user);
     }
 
-    // Nutzer löschen
-    public void deleteUser(Long userId) {
-        userRepository.delete(userId);
+    public void deleteUser(Long id) {
+        userRepository.delete(id);
     }
 
-    // Nutzer finden
-    public Optional<User> findUserById(Long userId) {
-        return userRepository.findById(userId);
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

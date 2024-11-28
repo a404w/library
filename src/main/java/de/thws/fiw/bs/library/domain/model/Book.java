@@ -1,23 +1,22 @@
 package de.thws.fiw.bs.library.domain.model;
 
-import java.util.Objects;
 import java.util.Set;
 
 public class Book {
     private Long id;
     private String title;
     private String isbn;
-    private boolean isAvailable;
     private String genre;
-    private Set<Author> authors;
+    private Set<String> authors;
+    private boolean isAvailable;
 
-    public Book(Long id, String title, String isbn, boolean isAvailable, String genre, Set<Author> authors) {
+    public Book(Long id, String title, String isbn, String genre, Set<String> authors, boolean isAvailable) {
         this.id = id;
         this.title = title;
         this.isbn = isbn;
-        this.isAvailable = isAvailable;
         this.genre = genre;
         this.authors = authors;
+        this.isAvailable = isAvailable;
     }
 
     // Getter und Setter
@@ -45,14 +44,6 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-
     public String getGenre() {
         return genre;
     }
@@ -61,26 +52,19 @@ public class Book {
         this.genre = genre;
     }
 
-    public Set<Author> getAuthors() {
+    public Set<String> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(Set<Author> authors) {
+    public void setAuthors(Set<String> authors) {
         this.authors = authors;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Book book = (Book) o;
-        return Objects.equals(id, book.id);
+    public boolean isAvailable() {
+        return isAvailable;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 }

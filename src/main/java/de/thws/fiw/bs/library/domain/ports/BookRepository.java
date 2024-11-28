@@ -1,19 +1,19 @@
 package de.thws.fiw.bs.library.domain.ports;
 
-import java.util.List;
-
 import de.thws.fiw.bs.library.domain.model.Book;
 
+import java.util.List;
+
 public interface BookRepository {
-    Book save(Book book); // Ein Buch speichern
+    Book save(Book book); // Speichert ein Buch
 
-    void delete(Long id); // Ein Buch löschen
+    void delete(Long id); // Löscht ein Buch
 
-    Book findById(Long id); // Buch nach ID finden
+    Book findById(Long id); // Sucht ein Buch anhand der ID
 
-    List<Book> findAll(); // Alle Bücher abrufen
+    List<Book> findAll(); // Gibt alle Bücher zurück
 
-    List<Book> findByGenre(String genre); // Bücher nach Genre filtern
+    List<Book> findByGenre(String genre); // Filtert Bücher nach Genre
 
-    List<Book> findByAuthorName(String authorName); // Bücher nach Autor filtern
+    List<Book> findByAuthor(String author); // Filtert Bücher nach Autor
 }

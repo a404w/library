@@ -14,17 +14,16 @@ public class ReturnService {
         this.userRepository = userRepository;
     }
 
-    // Buch zurückgeben
     public void returnBook(Long bookId, Long userId) {
         Book book = bookRepository.findById(bookId);
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         if (!user.getBorrowedBooks().contains(book)) {
-            throw new IllegalStateException("Book not borrowed by this user");
+            throw new IllegalStateException("User has not borrowed this book");
         }
 
         book.setAvailable(true);
-        user.removeBorrowedBook(book);
+        user.getBorrowedBooks().remove(book);
 
         bookRepository.save(book);
         userRepository.save(user);
