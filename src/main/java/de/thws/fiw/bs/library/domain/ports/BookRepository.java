@@ -5,15 +5,15 @@ import java.util.List;
 import de.thws.fiw.bs.library.domain.model.Book;
 
 public interface BookRepository {
-    List<Book> findAll();
+    Book save(Book book); // Ein Buch speichern
 
-    Book findById(Long id);
+    void delete(Long id); // Ein Buch löschen
 
-    List<Book> findByAuthorId(Long authorId);
+    Book findById(Long id); // Buch nach ID finden
 
-    List<Book> findByGenre(String genre);
+    List<Book> findAll(); // Alle Bücher abrufen
 
-    void save(Book book);
+    List<Book> findByGenre(String genre); // Bücher nach Genre filtern
 
-    void delete(Long id);
+    List<Book> findByAuthorName(String authorName); // Bücher nach Autor filtern
 }

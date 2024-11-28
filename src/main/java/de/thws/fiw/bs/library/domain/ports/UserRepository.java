@@ -5,9 +5,9 @@ import java.util.Optional;
 import de.thws.fiw.bs.library.domain.model.User;
 
 public interface UserRepository {
-    Optional<User> findById(Long id);
+    User save(User user); // Nutzer speichern
 
-    void save(User user);
+    void delete(Long id); // Nutzer löschen
 
-    void delete(Long id);
+    Optional<User> findById(Long id); // Nutzer nach ID suchen
 }
