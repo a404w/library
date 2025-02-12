@@ -1,0 +1,46 @@
+type Query {
+    getBookById(id: Int!): Book
+    getBooks(limit: Int, offset: Int): [Book]
+    getAuthors: [Author]
+    getUsers: [User]
+    getReservationsByUserId(userId: Int!): [Reservation]
+}
+
+type Mutation {
+    addBook(title: String!, authorId: Int!, genreId: Int!): Book
+    addUser(name: String!, email: String!): User
+    createReservation(userId: Int!, bookId: Int!): Reservation
+}
+
+type Book {
+    id: Int!
+    title: String!
+    author: Author!
+    genre: Genre!
+}
+
+type Author {
+    id: Int!
+    name: String!
+    books: [Book]
+}
+
+type Genre {
+    id: Int!
+    name: String!
+    books: [Book]
+}
+
+type User {
+    id: Int!
+    name: String!
+    email: String!
+    reservations: [Reservation]
+}
+
+type Reservation {
+    id: Int!
+    user: User!
+    book: Book!
+    reservedAt: String!
+}
