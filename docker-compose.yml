@@ -5,10 +5,13 @@ services:
     image: oscarfonts/h2
     container_name: h2_database
     ports:
-      - "8082:8082"  # H2 Web-Konsole
+      - "81:81"  # H2 Web-Konsole (statt 8082, damit es überall funktioniert)
       - "1521:1521"  # Port für Java-Verbindung
+    environment:
+      - H2_OPTIONS=-ifNotExists
     volumes:
-      - h2_data:/opt/h2-data # Persistente Datenbank 
+      - h2_data:/opt/h2-data  # Persistente Speicherung der Datenbank
+    restart: unless-stopped
 
 volumes:
   h2_data:
