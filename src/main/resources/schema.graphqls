@@ -1,46 +1,43 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
 type Query {
-    getBookById(id: Int!): Book
-    getBooks(limit: Int, offset: Int): [Book]
-    getAuthors: [Author]
-    getUsers: [User]
-    getReservationsByUserId(userId: Int!): [Reservation]
+  # Hole alle Bücher
+  books: [Book!]!
+
+  # Hole ein bestimmtes Buch via ID
+  bookById(id: ID!): Book
+
+  # Falls du nach Genre filtern willst
+  booksByGenre(genre: String!): [Book!]!
+  
+  # Falls du nach Autor filtern willst (optional)
+  # booksByAuthor(author: String!): [Book!]!
 }
 
 type Mutation {
-    addBook(title: String!, authorId: Int!, genreId: Int!): Book
-    addUser(name: String!, email: String!): User
-    createReservation(userId: Int!, bookId: Int!): Reservation
+  # Füge ein Buch hinzu, ohne separaten Input-Typ
+  addBook(
+    id: ID,
+    title: String!,
+    isbn: String!,
+    genre: String!,
+    authors: [String!]!,
+    isAvailable: Boolean!
+  ): Book
+
+  # Lösche ein Buch
+  deleteBook(id: ID!): Boolean
 }
 
+# Book entspricht deiner Java-Klasse
 type Book {
-    id: Int!
-    title: String!
-    author: Author!
-    genre: Genre!
-}
-
-type Author {
-    id: Int!
-    name: String!
-    books: [Book]
-}
-
-type Genre {
-    id: Int!
-    name: String!
-    books: [Book]
-}
-
-type User {
-    id: Int!
-    name: String!
-    email: String!
-    reservations: [Reservation]
-}
-
-type Reservation {
-    id: Int!
-    user: User!
-    book: Book!
-    reservedAt: String!
+  id: ID
+  title: String
+  isbn: String
+  genre: String
+  authors: [String]
+  isAvailable: Boolean
 }
