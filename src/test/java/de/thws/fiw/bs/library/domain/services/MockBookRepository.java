@@ -49,4 +49,10 @@ class MockBookRepository implements BookRepository {
                 .filter(book -> book.getAuthors().contains(author)) // Bücher nach Autor filtern
                 .toList();
     }
+    @Override
+    public void update(Book book) {
+        if (books.containsKey(book.getId())) {
+            books.put(book.getId(), book); // Buch mit neuen Werten ersetzen
+        }
+    }
 }

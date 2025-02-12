@@ -7,6 +7,8 @@ import java.util.List;
 public interface BookRepository {
     Book save(Book book);
 
+    void update(Book book);
+
     void delete(Long id);
 
     Book findById(Long id);
