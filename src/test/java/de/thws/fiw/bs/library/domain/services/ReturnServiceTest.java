@@ -66,6 +66,6 @@ class ReturnServiceTest {
         // Act & Assert
         IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> returnService.returnBook(1L, 1L));
-        assertEquals("Book not borrowed by this user", exception.getMessage());
+        assertEquals("User has not borrowed this book", exception.getMessage());
     }
 }
