@@ -1,6 +1,8 @@
 package de.thws.fiw.bs.library.domain.services;
 
+import de.thws.fiw.bs.library.domain.model.Author;
 import de.thws.fiw.bs.library.domain.model.Book;
+import de.thws.fiw.bs.library.domain.model.Genre;
 import de.thws.fiw.bs.library.domain.model.User;
 import de.thws.fiw.bs.library.domain.ports.BookRepository;
 import de.thws.fiw.bs.library.domain.ports.UserRepository;
@@ -8,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
-//import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,10 +29,17 @@ class ReturnServiceTest {
         // Service erstellen
         returnService = new ReturnService(bookRepository, userRepository);
 
-        // Initialdaten für Tests
-        Book book = new Book(1L, "Example Book", "12345", "Fiction", Set.of("Author"), false);
+        // Beispielautor und Genre erstellen
+        Author author = new Author(1L, "Author Name");
+        Genre genre = new Genre(1L, "Fiction", "Fictional books");
+
+        // Beispielbuch mit Many-to-Many-Beziehungen zu Author und Genre
+        Book book = new Book(1L, "Example Book", "12345", Set.of(genre), Set.of(author), false);
+
+        // Beispielnutzer mit ausgeliehenem Buch
         User user = new User(1L, "Test User", "test@example.com", new HashSet<>(Set.of(book)));
 
+        // Daten in Mock-Repositories speichern
         bookRepository.save(book);
         userRepository.save(user);
     }

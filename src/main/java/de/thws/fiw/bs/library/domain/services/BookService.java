@@ -1,6 +1,8 @@
 package de.thws.fiw.bs.library.domain.services;
 
+import de.thws.fiw.bs.library.domain.model.Author;
 import de.thws.fiw.bs.library.domain.model.Book;
+import de.thws.fiw.bs.library.domain.model.Genre;
 import de.thws.fiw.bs.library.domain.ports.BookRepository;
 
 import java.util.List;
@@ -28,11 +30,11 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-    public List<Book> findBooksByGenre(String genre) {
-        return bookRepository.findByGenre(genre);
+    public List<Book> findBooksByGenre(Genre genre) {
+        return bookRepository.findByGenre(genre.getGenrename());
     }
 
-    public List<Book> findBooksByAuthor(String author) {
+    public List<Book> findBooksByAuthor(Author author) {
         return bookRepository.findByAuthor(author);
     }
 }

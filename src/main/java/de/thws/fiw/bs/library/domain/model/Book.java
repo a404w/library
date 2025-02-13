@@ -1,25 +1,30 @@
 package de.thws.fiw.bs.library.domain.model;
-
-//import java.util.List;
-import java.util.Set;;
+import java.util.Set;
 
 public class Book {
     private Long id;
+    
     private String title;
     private String isbn;
-    private String genre;
-    private Set<String> authors;
+    
+    private Set<Genre> genres;
+
+    private Set<Author> authors;
+
     private boolean isAvailable;
 
-    public Book(Long id, String title, String isbn, String genre, Set<String> authors, boolean isAvailable) {
+    public Book() {}  // Standard-Konstruktor für JPA/Hibernate
+
+    public Book(Long id, String title, String isbn, Set<Genre> genres, Set<Author> authors, boolean isAvailable) {
         this.id = id;
         this.title = title;
         this.isbn = isbn;
-        this.genre = genre;
+        this.genres = genres;
         this.authors = authors;
         this.isAvailable = isAvailable;
     }
 
+    // Getter und Setter
     public Long getId() {
         return id;
     }
@@ -44,19 +49,19 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public String getGenre() {
-        return genre;
+    public Set<Genre> getGenres() {
+        return genres;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
     }
 
-    public Set<String> getAuthors() {
+    public Set<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(Set<String> authors) {
+    public void setAuthors(Set<Author> authors) {
         this.authors = authors;
     }
 

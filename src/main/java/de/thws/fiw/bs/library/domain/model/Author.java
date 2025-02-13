@@ -1,10 +1,18 @@
 package de.thws.fiw.bs.library.domain.model;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Author {
+
     private Long id;
+    
     private String name;
+
+ 
+    private List<Book> books;
+
+    public Author() {} // Standard-Konstruktor für JPA/Hibernate
 
     public Author(Long id, String name) {
         this.id = id;
@@ -26,6 +34,14 @@ public class Author {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
     @Override

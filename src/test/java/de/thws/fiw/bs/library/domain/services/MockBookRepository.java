@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.thws.fiw.bs.library.domain.model.Author;
 import de.thws.fiw.bs.library.domain.model.Book;
 import de.thws.fiw.bs.library.domain.ports.BookRepository;
 
@@ -37,18 +38,20 @@ class MockBookRepository implements BookRepository {
     }
 
     @Override
-    public List<Book> findByGenre(String genre) {
+    public List<Book> findByGenre(String genreName) {
         return books.values().stream()
-                .filter(book -> genre.equals(book.getGenre())) // Bücher nach Genre filtern
+                .filter(book -> book.getGenres().stream()
+                        .anyMatch(genre -> genre.getGenrename().equalsIgnoreCase(genreName))) // Bücher nach Genre filtern
                 .toList();
     }
 
     @Override
-    public List<Book> findByAuthor(String author) {
+    public List<Book> findByAuthor(Author author) {
         return books.values().stream()
                 .filter(book -> book.getAuthors().contains(author)) // Bücher nach Autor filtern
                 .toList();
     }
+
     @Override
     public void update(Book book) {
         if (books.containsKey(book.getId())) {

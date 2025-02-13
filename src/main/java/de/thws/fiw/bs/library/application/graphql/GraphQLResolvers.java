@@ -34,11 +34,11 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return bookService.getAllBooks();
     }
 
-    public List<Book> getBooksByGenre(String genre) {
-        return bookService.findBooksByGenre(genre);
+    public List<Book> getBooksByGenre(String genreName) {
+        return bookService.findBooksByGenre(new Genre(null, genreName, null));
     }
 
-    public List<Book> getBooksByAuthor(String author) {
+    public List<Book> getBooksByAuthor(Author author) {
         return bookService.findBooksByAuthor(author);
     }
 
@@ -51,8 +51,13 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // Mutations
-    public Book addBook(Long id, String title, String isbn, String genre, List<String> authors, boolean isAvailable) {
-        Book book = new Book(id, title, isbn, genre, new HashSet<>(authors), isAvailable);
+    public Book addBook(Long id, String title, String isbn, List<String> genres, List<Author> authors, boolean isAvailable) {
+        Set<Genre> genreSet = new HashSet<>();
+        for (String genreName : genres) {
+            genreSet.add(new Genre(null, genreName, null));
+        }
+
+        Book book = new Book(id, title, isbn, genreSet, new HashSet<>(authors), isAvailable);
         return bookService.addBook(book);
     }
 
