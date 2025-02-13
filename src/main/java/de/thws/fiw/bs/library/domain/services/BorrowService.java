@@ -16,10 +16,19 @@ public class BorrowService {
 
     public void borrowBook(Long bookId, Long userId) {
         Book book = bookRepository.findById(bookId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (book == null) {
+            throw new IllegalArgumentException("Book not found");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         if (!book.isAvailable()) {
             throw new IllegalStateException("Book is currently not available");
+        }
+
+        if (user.getBorrowedBooks().contains(book)) {
+            throw new IllegalStateException("User has already borrowed this book");
         }
 
         book.setAvailable(false);
@@ -28,4 +37,5 @@ public class BorrowService {
         bookRepository.save(book);
         userRepository.save(user);
     }
+
 }

@@ -7,6 +7,7 @@ public class Genre {
     private Long id;
     
     private String genrename;
+    
     private String beschreibung;
 
     private Set<Book> books;

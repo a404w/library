@@ -5,6 +5,7 @@ public class Book {
     private Long id;
     
     private String title;
+    
     private String isbn;
     
     private Set<Genre> genres;
