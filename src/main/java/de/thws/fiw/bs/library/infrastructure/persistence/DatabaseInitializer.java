@@ -10,7 +10,7 @@ public class DatabaseInitializer {
 
             // SQL-Befehl zum Erstellen von Tabellen
             String sql = "CREATE TABLE IF NOT EXISTS books (" +
-                    "id INT PRIMARY KEY, title VARCHAR(255), author VARCHAR(255));" +
+                    "id IDENTITY PRIMARY KEY, title VARCHAR(255), author VARCHAR(255));" +
                     "CREATE TABLE IF NOT EXISTS users (" +
                     "id INT PRIMARY KEY, name VARCHAR(255));";
             stmt.executeUpdate(sql);
