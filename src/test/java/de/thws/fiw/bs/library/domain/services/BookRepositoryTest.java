@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,28 +25,34 @@ class BookRepositoryTest {
 
     @Test
     void testSaveAndFindBook() throws SQLException {
-        // Stelle die Verbindung zur DB her
+        // Verbindung zur DB herstellen
         Connection conn = DatabaseConnection.getConnection();
 
-        // Ein Buch einfügen und die generierte ID zurückbekommen
-        String insertQuery = "INSERT INTO books (title, author) VALUES (?, ?) RETURNING id";
-        try (PreparedStatement stmt = conn.prepareStatement(insertQuery)) {
+        // Ein Buch einfügen und die automatisch generierte ID abrufen
+        String insertQuery = "INSERT INTO books (title, author) VALUES (?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, "Clean Code");
             stmt.setString(2, "Robert C. Martin");
-            ResultSet rs = stmt.executeQuery();
+            
+            // INSERT ausführen
+            int rowsInserted = stmt.executeUpdate();
+            assertEquals(1, rowsInserted, "Es sollte genau ein Buch eingefügt werden.");
 
-            // Prüfe, ob ein Datensatz zurückgekommen ist
-            assertTrue(rs.next(), "Es sollte genau ein Buch eingefügt werden.");
-            long bookId = rs.getLong("id");
+            // Generierte ID auslesen
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                assertTrue(rs.next(), "Es sollte einen generierten Key geben.");
+                long bookId = rs.getLong(1);
 
-            // Das Buch anhand der erhaltenen ID wieder auslesen
-            String selectQuery = "SELECT title FROM books WHERE id = ?";
-            try (PreparedStatement stmt2 = conn.prepareStatement(selectQuery)) {
-                stmt2.setLong(1, bookId);
-                ResultSet rs2 = stmt2.executeQuery();
-
-                assertTrue(rs2.next(), "Das eingefügte Buch sollte wieder gefunden werden.");
-                assertEquals("Clean Code", rs2.getString("title"), "Der Titel sollte mit dem gespeicherten Wert übereinstimmen.");
+                // Das Buch anhand der ID wieder auslesen
+                String selectQuery = "SELECT title, author FROM books WHERE id = ?";
+                try (PreparedStatement stmt2 = conn.prepareStatement(selectQuery)) {
+                    stmt2.setLong(1, bookId);
+                    try (ResultSet rs2 = stmt2.executeQuery()) {
+                        assertTrue(rs2.next(), "Das eingefügte Buch sollte gefunden werden.");
+                        assertEquals("Clean Code", rs2.getString("title"), "Titel sollte mit dem gespeicherten Wert übereinstimmen.");
+                        assertEquals("Robert C. Martin", rs2.getString("author"), "Autor sollte mit dem gespeicherten Wert übereinstimmen.");
+                    }
+                }
             }
         }
     }
