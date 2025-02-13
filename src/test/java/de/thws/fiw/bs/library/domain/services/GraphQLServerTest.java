@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,7 +18,6 @@ class GraphQLServerTest {
 
     private static final String GRAPHQL_ENDPOINT = "http://localhost:8080/graphql";
     private ExecutorService serverExecutor;
-    private GraphQLServer server;
 
     @BeforeEach
     void setUp() throws InterruptedException {
@@ -25,13 +25,12 @@ class GraphQLServerTest {
         serverExecutor = Executors.newSingleThreadExecutor();
         serverExecutor.submit(() -> {
             try {
-                server = new GraphQLServer();
                 GraphQLServer.main(new String[]{});
             } catch (IOException e) {
                 throw new RuntimeException("Fehler beim Starten des GraphQL-Servers", e);
             }
         });
-
+    
         // Warte, bis der Server gestartet ist
         Thread.sleep(2000);
     }
@@ -44,7 +43,7 @@ class GraphQLServerTest {
     }
 
     private String sendGraphQLRequest(String query) throws IOException {
-        URL url = new URL(GRAPHQL_ENDPOINT);
+        URL url = URI.create(GRAPHQL_ENDPOINT).toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
