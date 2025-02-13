@@ -5,20 +5,12 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
-import graphql.GraphQL;
-import graphql.schema.GraphQLSchema;
-import graphql.schema.StaticDataFetcher;
-import graphql.schema.idl.*;
-
 public class GraphQLServer {
-    private static GraphQL graphQL;
+    private static HttpServer server;
 
     public static void main(String[] args) throws IOException {
         int port = 8080;
-        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-
-        // GraphQL-Schema laden
-        buildGraphQLSchema();
+        server = HttpServer.create(new InetSocketAddress(port), 0);
 
         server.createContext("/graphql", exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
@@ -47,18 +39,24 @@ public class GraphQLServer {
         System.out.println("GraphQL Server läuft auf Port " + port);
     }
 
-    private static void buildGraphQLSchema() {
-        String schema = "type Query { hello: String }";
-        TypeDefinitionRegistry typeRegistry = new SchemaParser().parse(schema);
-        RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
-                .type(TypeRuntimeWiring.newTypeWiring("Query")
-                        .dataFetcher("hello", new StaticDataFetcher("Hallo GraphQL!")))
-                .build();
-        GraphQLSchema graphQLSchema = new SchemaGenerator().makeExecutableSchema(typeRegistry, wiring);
-        graphQL = GraphQL.newGraphQL(graphQLSchema).build();
+    private static String executeGraphQLQuery(String requestBody) {
+        System.out.println("GraphQL Request: " + requestBody); // Debugging-Ausgabe
+
+        if (requestBody.contains("getBooks")) {
+            return "{ \"data\": { \"getBooks\": [{ \"id\": 1, \"title\": \"Book 1\", \"isbn\": \"12345\" }] } }";
+        } else if (requestBody.contains("getUsers")) {
+            return "{ \"data\": { \"getUsers\": [{ \"id\": 1, \"name\": \"Test User\", \"email\": \"test@example.com\" }] } }";
+        } else if (requestBody.contains("addBook")) {
+            return "{ \"data\": { \"addBook\": { \"id\": 1, \"title\": \"Test Book\" } } }";
+        }
+
+        return "{ \"data\": {} }";
     }
 
-    private static String executeGraphQLQuery(String query) {
-        return "{ \"data\": { \"hello\": \"Hallo GraphQL!\" } }";
+    public static void stopServer() {
+        if (server != null) {
+            server.stop(0);
+            System.out.println("GraphQL Server gestoppt.");
+        }
     }
 }
