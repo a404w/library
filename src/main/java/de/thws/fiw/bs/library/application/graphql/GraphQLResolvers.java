@@ -17,7 +17,8 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     private final ReturnService returnService;
     private final UserService userService;
 
-    public GraphQLResolvers(BookService bookService, BorrowService borrowService, ReservationService reservationService, ReturnService returnService, UserService userService) {
+    public GraphQLResolvers(BookService bookService, BorrowService borrowService, ReservationService reservationService,
+            ReturnService returnService, UserService userService) {
         this.bookService = bookService;
         this.borrowService = borrowService;
         this.reservationService = reservationService;
@@ -48,13 +49,14 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return userService.getAllUsers();
     }
 
-    public Optional<User> getUserById(Long id) {
+    public User getUserById(Long id) {
         return userService.findUserById(id);
     }
 
     // Mutations
     // Book
-    public Book addBook(Long id, String title, String isbn, List<String> genres, List<Author> authors, boolean isAvailable) {
+    public Book addBook(Long id, String title, String isbn, List<String> genres, List<Author> authors,
+            boolean isAvailable) {
         Set<Genre> genreSet = new HashSet<>();
         for (String genreName : genres) {
             genreSet.add(new Genre(null, genreName, null));

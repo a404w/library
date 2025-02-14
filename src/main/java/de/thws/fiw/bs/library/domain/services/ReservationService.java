@@ -23,7 +23,7 @@ public class ReservationService {
 
     public void reserveBook(Long bookId, Long userId) {
         Book book = bookRepository.findById(bookId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(userId);
 
         if (book.isAvailable()) {
             throw new IllegalStateException("Book is available, no reservation needed");

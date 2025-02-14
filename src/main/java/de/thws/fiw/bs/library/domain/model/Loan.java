@@ -1,14 +1,14 @@
 package de.thws.fiw.bs.library.domain.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Loan {
     private Book book;
     private User user;
-    private Date from;
-    private Date to;
+    private LocalDate from;
+    private LocalDate to;
 
-    public Loan(Book book, User user, Date from, Date to) {
+    public Loan(Book book, User user, LocalDate from, LocalDate to) {
         this.book = book;
         this.user = user;
         this.from = from;
@@ -31,19 +31,19 @@ public class Loan {
         this.user = user;
     }
 
-    public Date getFrom() {
+    public LocalDate getFrom() {
         return from;
     }
 
-    public void setFrom(Date from) {
+    public void setFrom(LocalDate from) {
         this.from = from;
     }
 
-    public Date getTo() {
+    public LocalDate getTo() {
         return to;
     }
 
-    public void setTo(Date to) {
+    public void setTo(LocalDate to) {
         this.to = to;
     }
 }

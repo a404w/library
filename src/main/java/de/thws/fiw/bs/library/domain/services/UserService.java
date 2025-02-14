@@ -4,7 +4,6 @@ import de.thws.fiw.bs.library.domain.model.User;
 import de.thws.fiw.bs.library.domain.ports.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public class UserService {
     private final UserRepository userRepository;
@@ -21,7 +20,7 @@ public class UserService {
         userRepository.delete(id);
     }
 
-    public Optional<User> findUserById(Long id) {
+    public User findUserById(Long id) {
         return userRepository.findById(id);
     }
 

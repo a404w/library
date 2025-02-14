@@ -20,8 +20,7 @@ public class BorrowService {
             throw new IllegalArgumentException("Book not found");
         }
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(userId);
 
         if (!book.isAvailable()) {
             throw new IllegalStateException("Book is currently not available");

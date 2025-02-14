@@ -16,7 +16,7 @@ public class ReturnService {
 
     public void returnBook(Long bookId, Long userId) {
         Book book = bookRepository.findById(bookId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(userId);
 
         if (!user.getBorrowedBooks().contains(book)) {
             throw new IllegalStateException("User has not borrowed this book");
