@@ -1,11 +1,8 @@
 package de.thws.fiw.bs.library.domain.services;
 
-import de.thws.fiw.bs.library.domain.model.Author;
 import de.thws.fiw.bs.library.domain.model.Book;
-import de.thws.fiw.bs.library.domain.model.Genre;
 import de.thws.fiw.bs.library.domain.ports.BookRepository;
 import java.util.List;
-import java.util.Set;
 
 public class BookService {
 

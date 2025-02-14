@@ -1,8 +1,6 @@
 package de.thws.fiw.bs.library.domain.ports;
 
-import de.thws.fiw.bs.library.domain.model.Genre;
 import de.thws.fiw.bs.library.domain.model.Reservation;
-import de.thws.fiw.bs.library.domain.model.User;
 
 import java.util.List;
 

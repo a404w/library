@@ -1,6 +1,5 @@
 package de.thws.fiw.bs.library.domain.services;
 
-import de.thws.fiw.bs.library.domain.model.Book;
 import de.thws.fiw.bs.library.domain.model.Genre;
 import de.thws.fiw.bs.library.domain.ports.GenreRepository;
 import java.util.List;

@@ -5,8 +5,6 @@ import de.thws.fiw.bs.library.domain.services.*;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
 
 public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationResolver {
 
