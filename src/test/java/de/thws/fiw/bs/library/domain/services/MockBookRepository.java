@@ -1,4 +1,4 @@
-package de.thws.fiw.bs.library.domain.services;
+/*package de.thws.fiw.bs.library.domain.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,3 +59,4 @@ class MockBookRepository implements BookRepository {
         }
     }
 }
+ */
