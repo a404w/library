@@ -4,40 +4,153 @@ schema {
 }
 
 type Query {
-  # Hole alle Bücher
+  # 📚 Bücher
   books: [Book!]!
-
-  # Hole ein bestimmtes Buch via ID
   bookById(id: ID!): Book
+  booksByGenre(id: ID!): [Book!]!
+  booksByAuthor(id: ID!): [Book!]!
 
-  # Falls du nach Genre filtern willst
-  booksByGenre(genre: String!): [Book!]!
-  
-  # Falls du nach Autor filtern willst (optional)
-  # booksByAuthor(author: String!): [Book!]!
+  # 👥 Nutzer
+  users: [User!]!
+  userById(id: ID!): User
+  userByName(name: String!): User
+
+  # 📅 Ausleihen (Loans)
+  loans: [Loan!]!
+  loanById(id: ID!): Loan
+  loansByUser(userId: ID!): [Loan!]!
+
+  # ✍️ Autoren
+  authors: [Author!]!
+  authorById(id: ID!): Author
+  authorsByName(name: String!): [Author!]!
+
+  # 📖 Genres
+  genres: [Genre!]!
+  genreById(id: ID!): Genre
+  genresByName(name: String!): [Genre!]!
 }
 
 type Mutation {
-  # Füge ein Buch hinzu, ohne separaten Input-Typ
-  addBook(
-    id: ID,
-    title: String!,
-    isbn: String!,
-    genre: String!,
-    authors: [String!]!,
-    isAvailable: Boolean!
-  ): Book
-
-  # Lösche ein Buch
+  # 📚 Bücher
+  addBook(book: BookInput!): Book
+  updateBook(book: BookInput!): Boolean
   deleteBook(id: ID!): Boolean
+
+  # 📅 Loans
+  addLoan(book: BookInput!, user: UserInput!): Loan
+  deleteLoan(id: ID!): Boolean
+  updateLoan(loan: LoanInput!): Boolean
+
+  # 📅 Reservation
+  addReservation(book: BookInput!, user: UserInput!): Reservation
+  deleteReservation(id: ID!): Boolean
+  updateReservation(reservation: ReservationInput!): Boolean
+
+  # 👥 Nutzer
+  addUser(name: String!, email: String!): User
+  updateUser(user: UserInput!): Boolean
+  deleteUser(id: ID!): Boolean
+
+  # ✍️ Autoren
+  addAuthor(name: String!): Author
+  updateAuthor(author: AuthorInput!): Boolean
+  deleteAuthor(id: ID!): Boolean
+
+  # 📖 Genres
+  addGenre(genrename: String!, beschreibung: String!): Genre
+  updateGenre(genre: GenreInput!): Boolean
+  deleteGenre(id: ID!): Boolean
 }
 
-# Book entspricht deiner Java-Klasse
+# 📚 Book-Modell
 type Book {
+  id: ID!
+  title: String!
+  isbn: String!
+  genre: Genre!
+  authors: [Author!]!
+  isAvailable: Boolean!
+}
+
+# 👥 User-Modell
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  borrowedBooks: [Book!]!
+}
+
+# 📅 Loan-Modell
+type Loan {
+  id: ID!
+  book: Book!
+  user: User!
+  from: String!
+  to: String!
+}
+
+# 📅 Reservation-Modell
+type Reservation {
+  id: ID!
+  user: User!
+  book: Book!
+  reservationDate: String!
+}
+
+# ✍️ Author-Modell
+type Author {
+  id: ID!
+  name: String!
+  books: [Book!]!
+}
+
+# 📖 Genre-Modell
+type Genre {
+  id: ID!
+  genrename: String!
+  beschreibung: String!
+  books: [Book!]!
+}
+
+# 🔄 Input-Typen für Mutations
+input BookInput {
   id: ID
-  title: String
-  isbn: String
-  genre: String
-  authors: [String]
-  isAvailable: Boolean
+  title: String!
+  isbn: String!
+  genre: String!
+  authors: [String!]!
+  isAvailable: Boolean!
+}
+
+input UserInput {
+  id: ID
+  name: String!
+  email: String!
+}
+
+input LoanInput {
+  id: ID
+  book: BookInput!
+  user: UserInput!
+  from: String!
+  to: String!
+}
+
+input ReservationInput {
+  id: ID
+  user: UserInput!
+  book: BookInput!
+  reservationDate: String!
+}
+
+input AuthorInput {
+  id: ID
+  name: String!
+}
+
+input GenreInput {
+  id: ID
+  genrename: String!
+  beschreibung: String!
 }
