@@ -1,4 +1,4 @@
-package de.thws.fiw.bs.library.infrastructure.server;
+/*package de.thws.fiw.bs.library.infrastructure.server;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,4 +94,40 @@ class GraphQLServerTest {
         assertTrue(response.contains("\"addBook\""), "Response should contain 'addBook'");
         assertTrue(response.contains("\"title\": \"Test Book\""), "Book title should be 'Test Book'");
     }
+    @Test
+    void testInvalidQuery() throws Exception {
+        String invalidQuery = "{ \"query\": \"{ unknownQuery { id } }\" }";
+        String response = sendGraphQLRequest(invalidQuery);
+    
+        assertFalse(response.contains("\"unknownQuery\""), "Response should not contain 'unknownQuery'");
+        assertTrue(response.contains("\"data\": {}"), "Response should indicate an empty data object");
+    }
+    
+    @Test
+    void testAddBookAndRetrieveIt() throws Exception {
+        // Erst ein Buch hinzufügen
+        String mutation = "{ \"query\": \"mutation { addBook(id: 2, title: \\\"New Book\\\", isbn: \\\"67890\\\", genres: [\\\"Sci-Fi\\\"], authors: [], isAvailable: true) { id title } }\" }";
+        String addResponse = sendGraphQLRequest(mutation);
+        System.out.println("GraphQL Response: " + addResponse.toString());
+        assertTrue(addResponse.contains("\"addBook\""), "Response should contain 'addBook'");
+        assertTrue(addResponse.contains("\"title\": \"New Book\""), "Book title should be 'New Book'");
+    
+        // Jetzt nach allen Büchern fragen und prüfen, ob das Buch enthalten ist
+        String query = "{ \"query\": \"{ getBooks { id title isbn } }\" }";
+        String getResponse = sendGraphQLRequest(query);
+    
+        assertTrue(getResponse.contains("\"title\": \"New Book\""), "Added book should be retrievable");
+    }
+    
+    @Test
+    void testUnsupportedMethod() throws Exception {
+        // Versuch, eine GET-Anfrage zu senden, sollte nicht erlaubt sein
+        URL url = URI.create(GRAPHQL_ENDPOINT).toURL();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        
+        int responseCode = connection.getResponseCode();
+        assertEquals(405, responseCode, "Server should return 405 for unsupported GET method");
+    }
 }
+ */

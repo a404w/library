@@ -24,7 +24,6 @@ class BorrowServiceTest {
     void setUp() {
         // Mock-Repositories initialisieren
         bookRepository = new MockBookRepository();
-        userRepository = new MockUserRepository();
 
         // Beispielautor und Genre erstellen
         Author author = new Author(1L, "Author Name");

@@ -22,8 +22,8 @@ public class GraphQLServer {
                     requestBody.append(line);
                 }
 
-                // GraphQL-Anfrage ausführen
-                String jsonResponse = executeGraphQLQuery(requestBody.toString());
+                // GraphQL-Query verarbeiten
+                String jsonResponse = GraphQLHandler.handleRequest(requestBody.toString());
 
                 exchange.sendResponseHeaders(200, jsonResponse.length());
                 OutputStream os = exchange.getResponseBody();
@@ -36,21 +36,7 @@ public class GraphQLServer {
 
         server.setExecutor(null);
         server.start();
-        System.out.println("GraphQL Server läuft auf Port " + port);
-    }
-
-    private static String executeGraphQLQuery(String requestBody) {
-        System.out.println("GraphQL Request: " + requestBody); // Debugging-Ausgabe
-
-        if (requestBody.contains("getBooks")) {
-            return "{ \"data\": { \"getBooks\": [{ \"id\": 1, \"title\": \"Book 1\", \"isbn\": \"12345\" }] } }";
-        } else if (requestBody.contains("getUsers")) {
-            return "{ \"data\": { \"getUsers\": [{ \"id\": 1, \"name\": \"Test User\", \"email\": \"test@example.com\" }] } }";
-        } else if (requestBody.contains("addBook")) {
-            return "{ \"data\": { \"addBook\": { \"id\": 1, \"title\": \"Test Book\" } } }";
-        }
-
-        return "{ \"data\": {} }";
+        System.out.println("✅ GraphQL Server läuft auf Port " + port);
     }
 
     public static void stopServer() {

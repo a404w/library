@@ -6,7 +6,6 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationResolver {
@@ -45,7 +44,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // User
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return userService.getAllUsers();
     }
 

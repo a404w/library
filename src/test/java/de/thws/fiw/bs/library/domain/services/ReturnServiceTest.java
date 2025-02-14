@@ -24,7 +24,6 @@ class ReturnServiceTest {
     void setUp() {
         // Mock-Repositories initialisieren
         bookRepository = new MockBookRepository();
-        userRepository = new MockUserRepository();
 
         // Service erstellen
         returnService = new ReturnService(bookRepository, userRepository);
