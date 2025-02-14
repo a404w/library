@@ -2,6 +2,8 @@ package de.thws.fiw.bs.library.domain.services;
 
 import de.thws.fiw.bs.library.domain.model.Book;
 import de.thws.fiw.bs.library.domain.ports.BookRepository;
+import de.thws.fiw.bs.library.infrastructure.persistence.repository.BookRepositoryImpl;
+
 import java.util.List;
 
 public class BookService {
@@ -10,6 +12,9 @@ public class BookService {
 
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
+    }
+    public BookService() {
+        this.bookRepository = new BookRepositoryImpl();
     }
 
     public Book addBook(Book book) {

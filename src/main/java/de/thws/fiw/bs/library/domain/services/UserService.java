@@ -2,6 +2,8 @@ package de.thws.fiw.bs.library.domain.services;
 
 import de.thws.fiw.bs.library.domain.model.User;
 import de.thws.fiw.bs.library.domain.ports.UserRepository;
+import de.thws.fiw.bs.library.infrastructure.persistence.repository.UserRepositoryImpl;
+
 import java.util.List;
 
 public class UserService {
@@ -10,6 +12,9 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+    public UserService() {
+        this.userRepository = new UserRepositoryImpl();
     }
 
     public User addUser(String name, String email) {
