@@ -8,6 +8,13 @@ public class Loan {
     Date from;
     Date to;
 
+    public Loan(Book book, User user, Date from, Date to) {
+        this.book = book;
+        this.user = user;
+        this.from = from;
+        this.to = to;
+    }
+
     public Book getBook() {
         return book;
     }
