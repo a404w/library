@@ -70,7 +70,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     public User getUserByName(String name){
-        return userService.
+        return userService.getUserByName(name);
     }
 
     // ===========================
@@ -83,6 +83,8 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     public List<Loan> getLoansByBook(Long bookId) {
         return loanService.getLoansByBook(bookId); // Ausleihen eines Buches abrufen
     }
+
+    
 
     // ===========================
     // ✍️ AUTHOR QUERIES

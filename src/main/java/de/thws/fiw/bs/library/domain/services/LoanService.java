@@ -39,4 +39,8 @@ public class LoanService {
     public List<Loan> getLoansByBook(Long bookId) {
         return loanRepository.findByBookId(bookId); // Alle Ausleihen eines Buches
     }
+
+    public List<Loan> getAllLoans(){
+        return loanRepository.findAll();
+    }
 }
