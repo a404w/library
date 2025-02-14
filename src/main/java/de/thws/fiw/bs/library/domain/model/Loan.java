@@ -3,10 +3,10 @@ package de.thws.fiw.bs.library.domain.model;
 import java.util.Date;
 
 public class Loan {
-    Book book;
-    User user;
-    Date from;
-    Date to;
+    private Book book;
+    private User user;
+    private Date from;
+    private Date to;
 
     public Loan(Book book, User user, Date from, Date to) {
         this.book = book;
