@@ -12,10 +12,11 @@ public class Author {
  
     private List<Book> books;
 
-    public Author() {} // Standard-Konstruktor für JPA/Hibernate
+    public Author() {
 
-    public Author(Long id, String name) {
-        this.id = id;
+    } // Standard-Konstruktor für JPA/Hibernate
+
+    public Author(String name) {
         this.name = name;
     }
 
