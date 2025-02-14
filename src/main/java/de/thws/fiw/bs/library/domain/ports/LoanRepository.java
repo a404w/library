@@ -4,9 +4,11 @@ import de.thws.fiw.bs.library.domain.model.Loan;
 import java.util.List;
 
 public interface LoanRepository {
-    void save(Loan loan); // Speichert eine neue Ausleihe
+    Loan save(Loan loan); // Speichert eine neue Ausleihe
 
     void delete(Long id); // Löscht eine Ausleihe
+
+    void update(Loan loan);
 
     Loan findById(Long id); // Holt eine Ausleihe per ID
 

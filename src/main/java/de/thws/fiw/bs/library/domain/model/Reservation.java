@@ -3,13 +3,15 @@ package de.thws.fiw.bs.library.domain.model;
 import java.time.LocalDateTime;
 
 public class Reservation {
-    private Long id;
+    private Long id; // Die ID wird von der Datenbank generiert
     private User user;
     private Book book;
     private LocalDateTime reservationDate;
 
-    public Reservation(Long id, User user, Book book, LocalDateTime reservationDate) {
-        this.id = id;
+    public Reservation() {
+    }
+
+    public Reservation(User user, Book book, LocalDateTime reservationDate) {
         this.user = user;
         this.book = book;
         this.reservationDate = reservationDate;

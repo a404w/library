@@ -3,19 +3,15 @@ package de.thws.fiw.bs.library.domain.model;
 import java.util.Set;
 
 public class Genre {
-
-    private Long id;
-    
+    private Long id; // Die ID wird von der Datenbank generiert
     private String genrename;
-    
     private String beschreibung;
-
     private Set<Book> books;
 
-    public Genre() {}
+    public Genre() {
+    }
 
-    public Genre(Long id, String genrename, String beschreibung) {
-        this.id = id;
+    public Genre(String genrename, String beschreibung) {
         this.genrename = genrename;
         this.beschreibung = beschreibung;
     }

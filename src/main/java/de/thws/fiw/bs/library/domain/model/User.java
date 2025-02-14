@@ -3,16 +3,17 @@ package de.thws.fiw.bs.library.domain.model;
 import java.util.Set;
 
 public class User {
-    private Long id;
+    private Long id; // Die ID wird von der Datenbank generiert
     private String name;
     private String email;
     private Set<Book> borrowedBooks;
 
-    public User(Long id, String name, String email, Set<Book> borrowedBooks) {
-        this.id = id;
+    public User() {
+    }
+
+    public User(String name, String email) {
         this.name = name;
         this.email = email;
-        this.borrowedBooks = borrowedBooks;
     }
 
     // Getter und Setter

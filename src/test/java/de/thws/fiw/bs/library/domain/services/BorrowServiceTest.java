@@ -3,33 +3,39 @@ package de.thws.fiw.bs.library.domain.services;
 import de.thws.fiw.bs.library.domain.model.Author;
 import de.thws.fiw.bs.library.domain.model.Book;
 import de.thws.fiw.bs.library.domain.model.Genre;
+import de.thws.fiw.bs.library.domain.model.Loan;
 import de.thws.fiw.bs.library.domain.model.User;
 import de.thws.fiw.bs.library.domain.ports.BookRepository;
+import de.thws.fiw.bs.library.domain.ports.LoanRepository;
 import de.thws.fiw.bs.library.domain.ports.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BorrowServiceTest {
+class LoanServiceTest {
 
     private BookRepository bookRepository;
     private UserRepository userRepository;
-    private BorrowService borrowService;
+    private LoanRepository loanRepository;
+    private LoanService loanService;
 
     @BeforeEach
     void setUp() {
         // Mock-Repositories initialisieren
         bookRepository = new MockBookRepository();
+        userRepository = new MockUserRepository();
+        loanRepository = new MockLoanRepository();
 
         // Beispielautor und Genre erstellen
         Author author = new Author(1L, "Author Name");
         Genre genre = new Genre(1L, "Fiction", "Fictional books");
 
-        // Beispielbuch mit Many-to-Many-Beziehungen zu Author und Genre
+        // Beispielbuch
         Book book = new Book(1L, "Example Book", "12345", Set.of(genre), Set.of(author), true);
 
         // Beispielnutzer
@@ -39,21 +45,25 @@ class BorrowServiceTest {
         bookRepository.save(book);
         userRepository.save(user);
 
-        // BorrowService erstellen
-        borrowService = new BorrowService(bookRepository, userRepository);
+        // LoanService erstellen
+        loanService = new LoanService(loanRepository, userRepository, bookRepository);
     }
 
     @Test
     void borrowBook_Success() {
         // Act
-        borrowService.borrowBook(1L, 1L);
+        Loan loan = loanService.borrowBook(1L, 1L);
 
         // Assert
-        Book book = bookRepository.findById(1L);
-        User user = userRepository.findById(1L);
+        assertNotNull(loan);
+        assertEquals(1L, loan.getBook().getId());
+        assertEquals(1L, loan.getUser().getId());
 
+        Book book = bookRepository.findById(1L);
         assertFalse(book.isAvailable());
-        assertTrue(user.getBorrowedBooks().contains(book));
+
+        List<Loan> userLoans = loanService.getLoansByUser(1L);
+        assertEquals(1, userLoans.size());
     }
 
     @Test
@@ -63,16 +73,43 @@ class BorrowServiceTest {
         book.setAvailable(false);
 
         // Act & Assert
-        IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> borrowService.borrowBook(1L, 1L));
-        assertEquals("Book is currently not available", exception.getMessage());
+        Loan loan = loanService.borrowBook(1L, 1L);
+        assertNull(loan); // Loan darf nicht erstellt werden
     }
 
     @Test
     void borrowBook_UserNotFound() {
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> borrowService.borrowBook(1L, 999L)); // Nutzer-ID 999 existiert nicht
-        assertEquals("User not found", exception.getMessage());
+        // Act
+        Loan loan = loanService.borrowBook(1L, 999L); // Nutzer-ID 999 existiert nicht
+
+        // Assert
+        assertNull(loan); // Loan darf nicht erstellt werden
+    }
+
+    @Test
+    void returnBook_Success() {
+        // Arrange
+        Loan loan = loanService.borrowBook(1L, 1L);
+        assertNotNull(loan);
+
+        // Act
+        loanService.returnBook(loan.getId());
+
+        // Assert
+        Book book = bookRepository.findById(1L);
+        assertTrue(book.isAvailable());
+
+        List<Loan> userLoans = loanService.getLoansByUser(1L);
+        assertEquals(0, userLoans.size());
+    }
+
+    @Test
+    void returnBook_LoanNotFound() {
+        // Act
+        loanService.returnBook(999L); // Loan-ID 999 existiert nicht
+
+        // Assert (keine Exception sollte geworfen werden)
+        List<Loan> userLoans = loanService.getLoansByUser(1L);
+        assertEquals(0, userLoans.size());
     }
 }

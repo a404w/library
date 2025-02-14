@@ -1,23 +1,19 @@
 package de.thws.fiw.bs.library.domain.model;
+
 import java.util.Set;
 
 public class Book {
-    private Long id;
-    
+    private Long id; // Die ID wird von der Datenbank generiert
     private String title;
-    
     private String isbn;
-    
     private Set<Genre> genres;
-
     private Set<Author> authors;
-
     private boolean isAvailable;
 
-    public Book() {}  // Standard-Konstruktor für JPA/Hibernate
+    public Book() {
+    }
 
-    public Book(Long id, String title, String isbn, Set<Genre> genres, Set<Author> authors, boolean isAvailable) {
-        this.id = id;
+    public Book(String title, String isbn, Set<Genre> genres, Set<Author> authors, boolean isAvailable) {
         this.title = title;
         this.isbn = isbn;
         this.genres = genres;
