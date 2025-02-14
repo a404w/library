@@ -1,48 +1,28 @@
 package de.thws.fiw.bs.library.infrastructure.server;
+import de.thws.fiw.bs.library.infrastructure.server.GraphQLServlet;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
-import com.sun.net.httpserver.HttpServer;
-import java.io.*;
-import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
-import de.thws.fiw.bs.library.application.graphql.GraphQLHandler;
 public class GraphQLServer {
-    private static HttpServer server;
-
-    public static void main(String[] args) throws IOException {
-        int port = 8080;
-        server = HttpServer.create(new InetSocketAddress(port), 0);
-
-        server.createContext("/graphql", exchange -> {
-            if ("POST".equals(exchange.getRequestMethod())) {
-                InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
-                BufferedReader br = new BufferedReader(isr);
-                StringBuilder requestBody = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    requestBody.append(line);
-                }
-
-                // GraphQL-Query verarbeiten
-                String jsonResponse = GraphQLHandler.handleRequest(requestBody.toString());
-
-                exchange.sendResponseHeaders(200, jsonResponse.length());
-                OutputStream os = exchange.getResponseBody();
-                os.write(jsonResponse.getBytes());
-                os.close();
-            } else {
-                exchange.sendResponseHeaders(405, -1); // Method Not Allowed
-            }
-        });
-
-        server.setExecutor(null);
-        server.start();
-        System.out.println("✅ GraphQL Server läuft auf Port " + port);
-    }
-
-    public static void stopServer() {
-        if (server != null) {
-            server.stop(0);
-            System.out.println("GraphQL Server gestoppt.");
+    public static void main(String[] args) {
+        try {
+            Server server = new Server(8080);
+            ServletContextHandler context = new ServletContextHandler();
+            context.setContextPath("/");
+            
+            // Servlet direkt über die Klasse registrieren
+            ServletHolder servletHolder = new ServletHolder(GraphQLServlet.class);
+            context.addServlet(servletHolder, "/graphql");
+            
+            server.setHandler(context);
+            
+            System.out.println("✅ GraphQL Server läuft auf Port 8080...");
+            server.start();
+            server.join();
+        } catch (Exception e) {
+            System.err.println("❌ Fehler beim Starten des GraphQL-Servers:");
+            e.printStackTrace();
         }
     }
 }

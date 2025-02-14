@@ -93,8 +93,14 @@ public class GraphQLHandler {
             throw new RuntimeException("❌ Fehler beim Initialisieren des GraphQL-Schemas", e);
         }
     }
-
+    public static GraphQL getGraphQL() {
+        return graphQL;
+    }
     public static String handleRequest(String query) {
         return graphQL.execute(query).toSpecification().toString();
     }
+    public static GraphQLSchema getGraphQLSchema() {
+        return graphQL.getGraphQLSchema();
+    }
+    
 }
