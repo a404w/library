@@ -15,8 +15,8 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public Book addBook(String title, String isbn, Set<Genre> genres, Set<Author> authors, boolean isAvailable) {
-        return bookRepository.save(new Book(title, isbn, genres, authors, isAvailable)); // Buch speichern
+    public Book addBook(Book book) {
+        return bookRepository.save(book); // Buch speichern
     }
 
     public Book getBookById(Long id) {
