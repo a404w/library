@@ -121,7 +121,19 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     public Genre getGenresByName(String name) {
         return genreService.getGenresByName(name);
     }
-
+    public Genre addGenre(String genrename, String beschreibung) {
+        return genreService.addGenre(genrename, beschreibung);
+    }
+    public boolean deleteGenre(Long id) {
+        genreService.deleteGenre(id);
+        return true;
+    }
+    
+    public boolean updateGenre(Genre genre) {
+        genreService.updateGenre(genre);
+        return true;
+    }
+    
     // ===========================
     // ✍️ Reservation QUERIES
     // ===========================
@@ -232,7 +244,8 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return true; // Rückgabe für GraphQL
     }
 
-    public void updateAuthor(Author author) {
+    public boolean updateAuthor(Author author) {
         authorService.updateAuthor(author);
+        return true; // Rückgabe für GraphQL
     }
 }
