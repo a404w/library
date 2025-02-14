@@ -3,7 +3,9 @@ package de.thws.fiw.bs.library.infrastructure.persistence.repository;
 import de.thws.fiw.bs.library.domain.model.Book;
 import de.thws.fiw.bs.library.domain.model.Loan;
 import de.thws.fiw.bs.library.domain.model.User;
+import de.thws.fiw.bs.library.domain.ports.BookRepository;
 import de.thws.fiw.bs.library.domain.ports.LoanRepository;
+import de.thws.fiw.bs.library.domain.ports.UserRepository;
 import de.thws.fiw.bs.library.infrastructure.persistence.DatabaseConnection;
 
 import java.sql.*;
@@ -13,26 +15,49 @@ import java.util.List;
 
 public class LoanRepositoryImpl implements LoanRepository {
     private final Connection connection;
+    private final BookRepository bookRepository;
+    private final UserRepository userRepository;
 
-    public LoanRepositoryImpl() {
-        this.connection = DatabaseConnection.getConnection();
-    }
-
+    
+public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepository) {
+    this.connection = DatabaseConnection.getConnection();
+    this.bookRepository = bookRepository;
+    this.userRepository = userRepository;
+}
 
     @Override
-    public void save(Loan loan) {
+    public Loan save(Loan loan) {
         String sql = "INSERT INTO loans (book_id, user_id, loan_date, return_date) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, loan.getBook().getId());
             stmt.setLong(2, loan.getUser().getId());
             stmt.setDate(3, Date.valueOf(loan.getFrom()));
             stmt.setDate(4, Date.valueOf(loan.getTo()));
             stmt.executeUpdate();
+
+            // Automatisch generierte ID abrufen
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                loan.setId(generatedKeys.getLong(1));
+            }
+
+            return loan;
         } catch (SQLException e) {
             throw new RuntimeException("❌ Fehler beim Speichern der Ausleihe", e);
         }
     }
-    
+
+    @Override
+    public void update(Loan loan) {
+        String sql = "UPDATE loans SET return_date = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setDate(1, Date.valueOf(loan.getTo())); // Rückgabedatum aktualisieren
+            stmt.setLong(2, loan.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("❌ Fehler beim Aktualisieren der Ausleihe", e);
+        }
+    }
 
     @Override
     public void delete(Long id) {
@@ -92,16 +117,36 @@ public class LoanRepositoryImpl implements LoanRepository {
         return loans;
     }
 
+    @Override
+    public List<Loan> findAll() {
+        List<Loan> loans = new ArrayList<>();
+        String sql = "SELECT * FROM loans";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                loans.add(mapResultSetToLoan(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("❌ Fehler beim Abrufen aller Ausleihen", e);
+        }
+        return loans;
+    }
+
     private Loan mapResultSetToLoan(ResultSet rs) throws SQLException {
         Long bookId = rs.getLong("book_id");
         Long userId = rs.getLong("user_id");
         LocalDate loanDate = rs.getDate("loan_date").toLocalDate();
         LocalDate returnDate = rs.getDate("return_date").toLocalDate();
-
-        // Dummy Book und User (da die vollständigen Objekte aus anderen Tabellen kommen)
-        Book book = new Book(bookId, "Dummy Title", "Dummy ISBN", null, null, true);
-        User user = new User(userId, "Dummy Name", "dummy@email.com", null);
-
-        return new Loan( book, user, loanDate, returnDate);
+    
+        // Nutze BookRepository & UserRepository, um echte Objekte zu laden
+        Book book = bookRepository.findById(bookId);
+        User user = userRepository.findById(userId);
+    
+        if (book == null || user == null) {
+            throw new RuntimeException("⚠️ Buch oder Nutzer nicht gefunden! (bookId: " + bookId + ", userId: " + userId + ")");
+        }
+    
+        return new Loan(book, user, loanDate, returnDate);
     }
+    
 }
