@@ -51,7 +51,7 @@ class ReturnServiceTest {
 
         // Assert
         Book book = bookRepository.findById(1L);
-        User user = userRepository.findById(1L).orElseThrow();
+        User user = userRepository.findById(1L);
 
         assertTrue(book.isAvailable());
         assertFalse(user.getBorrowedBooks().contains(book));
@@ -68,7 +68,7 @@ class ReturnServiceTest {
     @Test
     void returnBook_BookNotBorrowedByUser() {
         // Arrange
-        User user = userRepository.findById(1L).orElseThrow();
+        User user = userRepository.findById(1L);
         user.getBorrowedBooks().clear(); // Nutzer hat keine ausgeliehenen Bücher
 
         // Act & Assert

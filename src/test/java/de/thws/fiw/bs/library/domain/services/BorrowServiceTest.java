@@ -51,7 +51,7 @@ class BorrowServiceTest {
 
         // Assert
         Book book = bookRepository.findById(1L);
-        User user = userRepository.findById(1L).orElseThrow();
+        User user = userRepository.findById(1L);
 
         assertFalse(book.isAvailable());
         assertTrue(user.getBorrowedBooks().contains(book));

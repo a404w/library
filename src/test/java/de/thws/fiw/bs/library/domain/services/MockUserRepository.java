@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import de.thws.fiw.bs.library.domain.model.User;
 import de.thws.fiw.bs.library.domain.ports.UserRepository;
@@ -24,8 +23,8 @@ class MockUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return Optional.ofNullable(users.get(id));
+    public User findById(Long id) {
+        return users.get(id);
     }
 
     @Override
