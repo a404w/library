@@ -1,6 +1,5 @@
 package de.thws.fiw.bs.library.infrastructure.server;
 
-import de.thws.fiw.bs.library.infrastructure.server.GraphQLServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +68,7 @@ class GraphQLServerTest {
     void testGetBooks() throws Exception {
         String query = "{ \"query\": \"{ getBooks { id title isbn } }\" }";
         String response = sendGraphQLRequest(query);
-        System.out.println("GraphQL Response: " + response.toString());
+        //System.out.println("GraphQL Response: " + response.toString());
 
 
         assertTrue(response.contains("\"getBooks\""), "Response should contain 'getBooks'");
@@ -79,7 +78,7 @@ class GraphQLServerTest {
     void testGetUsers() throws Exception {
         String query = "{ \"query\": \"{ getUsers { id name email } }\" }";
         String response = sendGraphQLRequest(query);
-        System.out.println("GraphQL Response: " + response.toString());
+        //System.out.println("GraphQL Response: " + response.toString());
 
 
         assertTrue(response.contains("\"getUsers\""), "Response should contain 'getUsers'");
@@ -89,7 +88,7 @@ class GraphQLServerTest {
     void testAddBookMutation() throws Exception {
         String mutation = "{ \"query\": \"mutation { addBook(id: 1, title: \\\"Test Book\\\", isbn: \\\"12345\\\", genres: [\\\"Fiction\\\"], authors: [], isAvailable: true) { id title } }\" }";
         String response = sendGraphQLRequest(mutation);
-        System.out.println("GraphQL Response: " + response.toString());
+        //System.out.println("GraphQL Response: " + response.toString());
 
 
         assertTrue(response.contains("\"addBook\""), "Response should contain 'addBook'");
