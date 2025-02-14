@@ -15,6 +15,13 @@ public class User {
         this.name = name;
         this.email = email;
     }
+    
+
+    public User(String name, String email, Set<Book> borrowedBooks) {
+        this.name = name;
+        this.email = email;
+        this.borrowedBooks = borrowedBooks;
+    }
 
     // Getter und Setter
     public Long getId() {
