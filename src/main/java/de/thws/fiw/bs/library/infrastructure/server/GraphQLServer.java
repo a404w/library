@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-
+import de.thws.fiw.bs.library.application.graphql.GraphQLHandler;
 public class GraphQLServer {
     private static HttpServer server;
 
