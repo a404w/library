@@ -6,8 +6,7 @@ import de.thws.fiw.bs.library.domain.ports.UserRepository;
 import de.thws.fiw.bs.library.infrastructure.persistence.DatabaseConnection;
 
 import java.sql.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class UserRepositoryImpl implements UserRepository {
     private final Connection connection;
@@ -24,17 +23,34 @@ public class UserRepositoryImpl implements UserRepository {
             stmt.setString(2, user.getEmail());
             stmt.executeUpdate();
 
-            // Get generated ID from database
+            // Set generated ID
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 user.setId(generatedKeys.getLong(1));
             }
 
-            // Save borrowed books relations if they exist
+            // Save borrowed books
             saveBorrowedBooks(user);
             return user;
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Error saving user", e);
+            throw new RuntimeException("❌ Fehler beim Speichern des Benutzers", e);
+        }
+    }
+
+    @Override
+    public void update(User user) {
+        String sql = "UPDATE users SET name = ?, email = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, user.getName());
+            stmt.setString(2, user.getEmail());
+            stmt.setLong(3, user.getId());
+            stmt.executeUpdate();
+
+            // Update borrowed books
+            deleteBorrowedBooks(user.getId());
+            saveBorrowedBooks(user);
+        } catch (SQLException e) {
+            throw new RuntimeException("❌ Fehler beim Aktualisieren des Benutzers", e);
         }
     }
 
@@ -44,11 +60,9 @@ public class UserRepositoryImpl implements UserRepository {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
-
-            // Remove book relations
-            deleteBorrowedBooks(id);
+            deleteBorrowedBooks(id); // Remove book relations
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Error deleting user", e);
+            throw new RuntimeException("❌ Fehler beim Löschen des Benutzers", e);
         }
     }
 
@@ -59,29 +73,54 @@ public class UserRepositoryImpl implements UserRepository {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                Set<Book> borrowedBooks = getBorrowedBooks(id);
-                return new User(rs.getLong("id"), rs.getString("name"), rs.getString("email"), borrowedBooks);
+                return new User( 
+                    rs.getString("name"), 
+                    rs.getString("email"), 
+                    getBorrowedBooks(id)
+                );
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Error retrieving user", e);
+            throw new RuntimeException("❌ Fehler beim Abrufen des Benutzers", e);
         }
         return null;
     }
 
     @Override
-    public Set<User> findAll() {
-        Set<User> users = new HashSet<>();
+    public List<User> findAll() {
+        List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users";
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                Set<Book> borrowedBooks = getBorrowedBooks(rs.getLong("id"));
-                users.add(new User(rs.getLong("id"), rs.getString("name"), rs.getString("email"), borrowedBooks));
+                users.add(new User(
+                    rs.getString("name"), 
+                    rs.getString("email"), 
+                    getBorrowedBooks(rs.getLong("id"))
+                ));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Error retrieving all users", e);
+            throw new RuntimeException("❌ Fehler beim Abrufen aller Benutzer", e);
         }
         return users;
+    }
+
+    @Override
+    public User findByName(String name) {
+        String sql = "SELECT * FROM users WHERE name = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User( 
+                    rs.getString("name"), 
+                    rs.getString("email"), 
+                    getBorrowedBooks(rs.getLong("id"))
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("❌ Fehler beim Abrufen des Benutzers nach Name", e);
+        }
+        return null;
     }
 
     private void saveBorrowedBooks(User user) throws SQLException {
@@ -113,7 +152,11 @@ public class UserRepositoryImpl implements UserRepository {
             stmt.setLong(1, userId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                books.add(new Book(rs.getLong("id"), rs.getString("title"), rs.getString("isbn"), null, null, rs.getBoolean("is_available")));
+                books.add(new Book( 
+                    rs.getString("title"), 
+                    rs.getString("isbn"), 
+                    null, null, rs.getBoolean("is_available")
+                ));
             }
         }
         return books;
