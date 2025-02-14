@@ -16,11 +16,11 @@ public class LoanService {
         this.loanRepository = loanRepository;
     }
 
-    public Loan borrowBook(Book book, User user) {
+    public Loan addLoan(Book book, User user) {
         return loanRepository.save(new Loan(book, user, LocalDate.now(), LocalDate.now().plusDays(14)));
     }
 
-    public void returnBook(Long loanId) {
+    public void deleteLoan(Long loanId) {
         loanRepository.delete(loanId); // Ausleihe löschen (Buch zurückgegeben)
     }
 
@@ -38,5 +38,9 @@ public class LoanService {
 
     public List<Loan> getLoansByBook(Long bookId) {
         return loanRepository.findByBookId(bookId); // Alle Ausleihen eines Buches
+    }
+
+    public List<Loan> getAllLoans(){
+        return loanRepository.findAll();
     }
 }

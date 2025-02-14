@@ -1,11 +1,8 @@
 package de.thws.fiw.bs.library.domain.services;
 
-import de.thws.fiw.bs.library.domain.model.Author;
 import de.thws.fiw.bs.library.domain.model.Book;
-import de.thws.fiw.bs.library.domain.model.Genre;
 import de.thws.fiw.bs.library.domain.ports.BookRepository;
 import java.util.List;
-import java.util.Set;
 
 public class BookService {
 
@@ -15,8 +12,8 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public Book addBook(String title, String isbn, Set<Genre> genres, Set<Author> authors, boolean isAvailable) {
-        return bookRepository.save(new Book(title, isbn, genres, authors, isAvailable)); // Buch speichern
+    public Book addBook(Book book) {
+        return bookRepository.save(book); // Buch speichern
     }
 
     public Book getBookById(Long id) {

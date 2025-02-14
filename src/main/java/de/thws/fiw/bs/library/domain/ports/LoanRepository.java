@@ -15,4 +15,6 @@ public interface LoanRepository {
     List<Loan> findByUserId(Long userId); // Holt alle Ausleihen eines Nutzers
 
     List<Loan> findByBookId(Long bookId); // Holt alle Ausleihen eines Buches
+
+    List<Loan> findAll();
 }

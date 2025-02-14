@@ -24,11 +24,11 @@ public class ReservationService {
         reservationRepository.delete(reservationId); // Reservierung stornieren
     }
 
-    public void updateReservation(Reservation reservation){
+    public void updateReservation(Reservation reservation) {
         reservationRepository.update(reservation);
     }
 
-    public Reservation getReservationById(Long id){
+    public Reservation getReservationById(Long id) {
         return reservationRepository.findById(id);
     }
 
@@ -38,5 +38,9 @@ public class ReservationService {
 
     public List<Reservation> getReservationsByBook(Long bookId) {
         return reservationRepository.findByBookId(bookId); // Alle Reservierungen eines Buches
+    }
+
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
     }
 }

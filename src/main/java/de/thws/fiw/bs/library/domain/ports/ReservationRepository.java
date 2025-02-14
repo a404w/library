@@ -1,7 +1,7 @@
 package de.thws.fiw.bs.library.domain.ports;
 
-import de.thws.fiw.bs.library.domain.model.Genre;
 import de.thws.fiw.bs.library.domain.model.Reservation;
+
 import java.util.List;
 
 public interface ReservationRepository {
@@ -16,4 +16,6 @@ public interface ReservationRepository {
     List<Reservation> findByUserId(Long userId); // Findet alle Reservierungen eines Nutzers
 
     List<Reservation> findByBookId(Long bookId); // Findet alle Reservierungen eines Buchs
+
+    List<Reservation> findAll();
 }
