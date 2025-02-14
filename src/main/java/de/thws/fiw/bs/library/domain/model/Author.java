@@ -4,18 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class Author {
-
-    private Long id;
-    
+    private Long id; // Die ID wird von der Datenbank generiert, aber auch manuell gesetzt
     private String name;
-
- 
     private List<Book> books;
 
-    public Author() {} // Standard-Konstruktor für JPA/Hibernate
+    public Author() {
+    }
 
-    public Author(Long id, String name) {
-        this.id = id;
+    public Author(String name) {
         this.name = name;
     }
 

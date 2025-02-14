@@ -1,8 +1,6 @@
 package de.thws.fiw.bs.library.domain.ports;
 
-import de.thws.fiw.bs.library.domain.model.Author;
 import de.thws.fiw.bs.library.domain.model.Book;
-
 
 import java.util.List;
 
@@ -17,7 +15,7 @@ public interface BookRepository {
 
     List<Book> findAll();
 
-    List<Book> findByGenre(String genre);
+    List<Book> findByGenreId(Long id);
 
-    List<Book> findByAuthor(Author author);
+    List<Book> findByAuthorId(Long id);
 }

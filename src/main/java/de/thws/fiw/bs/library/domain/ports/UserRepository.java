@@ -9,7 +9,11 @@ public interface UserRepository {
 
     void delete(Long id);
 
+    void update(User user);
+
     User findById(Long id);
 
     List<User> findAll();
+
+    User findByName(String name);
 }

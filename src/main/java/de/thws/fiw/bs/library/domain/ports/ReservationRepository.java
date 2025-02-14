@@ -1,13 +1,19 @@
 package de.thws.fiw.bs.library.domain.ports;
 
+import de.thws.fiw.bs.library.domain.model.Genre;
+import de.thws.fiw.bs.library.domain.model.Reservation;
 import java.util.List;
 
-import de.thws.fiw.bs.library.domain.model.Reservation;
-
 public interface ReservationRepository {
-    Reservation save(Reservation reservation);
+    Reservation save(Reservation reservation); // Speichert eine neue Reservierung
 
-    void delete(Long id);
+    void update(Reservation reservation);
 
-    List<Reservation> findByUserId(Long userId);
+    void delete(Long id); // Löscht eine Reservierung nach ID
+
+    Reservation findById(Long id);
+
+    List<Reservation> findByUserId(Long userId); // Findet alle Reservierungen eines Nutzers
+
+    List<Reservation> findByBookId(Long bookId); // Findet alle Reservierungen eines Buchs
 }
