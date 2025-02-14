@@ -37,7 +37,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // ===========================
-    // 📚 BOOK QUERIES
+    // BOOK QUERIES
     // ===========================
 
     public Book getBookById(Long id) {
@@ -57,7 +57,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // ===========================
-    // 👥 USER QUERIES
+    // USER QUERIES
     // ===========================
     public List<User> getUsers() {
         return userService.getAllUsers(); // Alle Nutzer abrufen
@@ -72,7 +72,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // ===========================
-    // 📅 LOAN QUERIES
+    // LOAN QUERIES
     // ===========================
     public List<Loan> getLoansByUser(Long userId) {
         return loanService.getLoansByUser(userId); // Ausleihen eines Nutzers abrufen
@@ -91,7 +91,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // ===========================
-    // ✍️ AUTHOR QUERIES
+    // AUTHOR QUERIES
     // ===========================
 
     public List<Author> getAllAuthors() {
@@ -107,7 +107,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // ===========================
-    // ✍️ GENRE QUERIES
+    // GENRE QUERIES
     // ===========================
 
     public List<Genre> getAllGenres() {
@@ -135,7 +135,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
     
     // ===========================
-    // ✍️ Reservation QUERIES
+    // Reservation QUERIES
     // ===========================
 
     public List<Reservation> getAllReservations() {
@@ -155,7 +155,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // ===========================
-    // 📚 BOOK MUTATIONS
+    // BOOK MUTATIONS
     // ===========================
 
     public Book addBook(Book book) {
@@ -181,7 +181,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     // }
 
     // ===========================
-    // 📅 LOAN MUTATIONS
+    // LOAN MUTATIONS
     // ===========================
     public Loan addLoan(Book book, User user) {
         return loanService.addLoan(book, user); // Buch speichern
@@ -198,7 +198,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // ===========================
-    // 📅 RESERVATION MUTATIONS
+    // RESERVATION MUTATIONS
     // ===========================
     public Reservation addReservation(Book book, User user) {
         return reservationService.reserveBook(book, user);
@@ -215,7 +215,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // ===========================
-    // 👥 USER MUTATIONS
+    // USER MUTATIONS
     // ===========================
     public User addUser(String name, String email) {
         return userService.addUser(name, email);
@@ -232,7 +232,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // ===========================
-    // ✍️ AUTHOR MUTATIONS
+    // AUTHOR MUTATIONS
     // ===========================
 
     public Author addAuthor(String name) {
