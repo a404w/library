@@ -26,6 +26,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // Queries
+    // Book
     public Book getBookById(Long id) {
         return bookService.findBookById(id);
     }
@@ -42,6 +43,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return bookService.findBooksByAuthor(author);
     }
 
+    // User
     public List<User> getUsers() {
         return userService.getAllUsers();
     }
@@ -51,6 +53,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // Mutations
+    // Book
     public Book addBook(Long id, String title, String isbn, List<String> genres, List<Author> authors, boolean isAvailable) {
         Set<Genre> genreSet = new HashSet<>();
         for (String genreName : genres) {
@@ -65,15 +68,6 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         bookService.deleteBook(id);
     }
 
-    public User addUser(Long id, String name, String email, Set<Book> borrowedBooks) {
-        User user = new User(id, name, email, borrowedBooks);
-        return userService.addUser(user);
-    }
-
-    public void deleteUser(Long id) {
-        userService.deleteUser(id);
-    }
-
     public void borrowBook(Long bookId, Long userId) {
         borrowService.borrowBook(bookId, userId);
     }
@@ -84,5 +78,15 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
 
     public void reserveBook(Long bookId, Long userId) {
         reservationService.reserveBook(bookId, userId);
+    }
+
+    // User
+    public User addUser(Long id, String name, String email, Set<Book> borrowedBooks) {
+        User user = new User(id, name, email, borrowedBooks);
+        return userService.addUser(user);
+    }
+
+    public void deleteUser(Long id) {
+        userService.deleteUser(id);
     }
 }
