@@ -4,66 +4,66 @@ schema {
 }
 
 type Query {
-  # 📚 Bücher
+  # Bücher
   books: [Book!]!
   bookById(id: ID!): Book
   booksByGenre(id: ID!): [Book!]!
   booksByAuthor(id: ID!): [Book!]!
 
-  # 👥 Nutzer
+  # Nutzer
   users: [User!]!
   userById(id: ID!): User
   userByName(name: String!): User
 
-  # 📅 Ausleihen (Loans)
+  # Ausleihen (Loans)
   loans: [Loan!]!
   loanById(id: ID!): Loan
   loansByUser(userId: ID!): [Loan!]!
 
-  # ✍️ Autoren
+  # Autoren
   authors: [Author!]!
   authorById(id: ID!): Author
   authorsByName(name: String!): [Author!]!
 
-  # 📖 Genres
+  # Genres
   genres: [Genre!]!
   genreById(id: ID!): Genre
   genresByName(name: String!): [Genre!]!
 }
 
 type Mutation {
-  # 📚 Bücher
+  # Bücher
   addBook(book: BookInput!): Book
   updateBook(book: BookInput!): Boolean
   deleteBook(id: ID!): Boolean
 
-  # 📅 Loans
+  # Loans
   addLoan(book: BookInput!, user: UserInput!): Loan
   deleteLoan(id: ID!): Boolean
   updateLoan(loan: LoanInput!): Boolean
 
-  # 📅 Reservation
+  # Reservation
   addReservation(book: BookInput!, user: UserInput!): Reservation
   deleteReservation(id: ID!): Boolean
   updateReservation(reservation: ReservationInput!): Boolean
 
-  # 👥 Nutzer
+  # Nutzer
   addUser(name: String!, email: String!): User
   updateUser(user: UserInput!): Boolean
   deleteUser(id: ID!): Boolean
 
-  # ✍️ Autoren
+  #  Autoren
   addAuthor(name: String!): Author
   updateAuthor(author: AuthorInput!): Boolean
   deleteAuthor(id: ID!): Boolean
 
-  # 📖 Genres
+  #  Genres
   addGenre(genrename: String!, beschreibung: String!): Genre
   updateGenre(genre: GenreInput!): Boolean
   deleteGenre(id: ID!): Boolean
 }
 
-# 📚 Book-Modell
+# Book-Modell
 type Book {
   id: ID!
   title: String!
@@ -73,7 +73,7 @@ type Book {
   isAvailable: Boolean!
 }
 
-# 👥 User-Modell
+# User-Modell
 type User {
   id: ID!
   name: String!
@@ -81,7 +81,7 @@ type User {
   borrowedBooks: [Book!]!
 }
 
-# 📅 Loan-Modell
+# Loan-Modell
 type Loan {
   id: ID!
   book: Book!
@@ -90,7 +90,7 @@ type Loan {
   to: String!
 }
 
-# 📅 Reservation-Modell
+# Reservation-Modell
 type Reservation {
   id: ID!
   user: User!
@@ -98,14 +98,14 @@ type Reservation {
   reservationDate: String!
 }
 
-# ✍️ Author-Modell
+# Author-Modell
 type Author {
   id: ID!
   name: String!
   books: [Book!]!
 }
 
-# 📖 Genre-Modell
+# Genre-Modell
 type Genre {
   id: ID!
   genrename: String!
@@ -113,7 +113,7 @@ type Genre {
   books: [Book!]!
 }
 
-# 🔄 Input-Typen für Mutations
+# Input-Typen für Mutations
 input BookInput {
   id: ID
   title: String!
