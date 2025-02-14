@@ -1,4 +1,4 @@
-package de.thws.fiw.bs.library.domain.services;
+package de.thws.fiw.bs.library.infrastructure.server;
 
 import de.thws.fiw.bs.library.infrastructure.server.GraphQLServer;
 import org.junit.jupiter.api.AfterEach;
