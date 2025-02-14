@@ -18,12 +18,11 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Book save(Book book) {
-        String sql = "INSERT INTO books (id, title, isbn, isAvailable) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO books (title, isbn, is_available) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setLong(1, book.getId());
-            stmt.setString(2, book.getTitle());
-            stmt.setString(3, book.getIsbn());
-            stmt.setBoolean(4, book.isAvailable());
+            stmt.setString(1, book.getTitle());
+            stmt.setString(2, book.getIsbn());
+            stmt.setBoolean(3, book.isAvailable());
             stmt.executeUpdate();
 
             // Falls die ID automatisch generiert wird
@@ -40,7 +39,10 @@ public class BookRepositoryImpl implements BookRepository {
             throw new RuntimeException("❌ Fehler beim Speichern des Buches", e);
         }
     }
+
     private void saveGenres(Book book) throws SQLException {
+        if (book.getGenres() == null || book.getGenres().isEmpty()) return;
+
         String sql = "INSERT INTO book_genre (book_id, genre_id) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Genre genre : book.getGenres()) {
@@ -52,6 +54,8 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     private void saveAuthors(Book book) throws SQLException {
+        if (book.getAuthors() == null || book.getAuthors().isEmpty()) return;
+
         String sql = "INSERT INTO book_author (book_id, author_id) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Author author : book.getAuthors()) {
@@ -78,13 +82,13 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public List<Book> findByAuthor(Author author) {
+    public List<Book> findByAuthorId(Long authorId) {
         List<Book> books = new ArrayList<>();
         String sql = "SELECT b.* FROM books b " +
                      "JOIN book_author ba ON b.id = ba.book_id " +
                      "WHERE ba.author_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, author.getId());
+            stmt.setLong(1, authorId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 books.add(mapResultSetToBook(rs));
@@ -96,14 +100,13 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public List<Book> findByGenre(String genreName) {
+    public List<Book> findByGenreId(Long genreId) {
         List<Book> books = new ArrayList<>();
         String sql = "SELECT b.* FROM books b " +
                      "JOIN book_genre bg ON b.id = bg.book_id " +
-                     "JOIN genres g ON bg.genre_id = g.id " +
-                     "WHERE g.genrename = ?";
+                     "WHERE bg.genre_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, genreName);
+            stmt.setLong(1, genreId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 books.add(mapResultSetToBook(rs));
@@ -113,21 +116,19 @@ public class BookRepositoryImpl implements BookRepository {
         }
         return books;
     }
-    
 
     private Book mapResultSetToBook(ResultSet rs) throws SQLException {
         Long bookId = rs.getLong("id");
         String title = rs.getString("title");
         String isbn = rs.getString("isbn");
-        boolean isAvailable = rs.getBoolean("isAvailable");
-    
+        boolean isAvailable = rs.getBoolean("is_available");
+
         // Autoren und Genres für das Buch abrufen
         Set<Author> authors = getAuthorsForBook(bookId);
         Set<Genre> genres = getGenresForBook(bookId);
-    
-        return new Book(bookId, title, isbn, genres, authors, isAvailable);
+
+        return new Book(title, isbn, genres, authors, isAvailable);
     }
-    
 
     private Set<Author> getAuthorsForBook(Long bookId) throws SQLException {
         Set<Author> authors = new HashSet<>();
@@ -138,7 +139,7 @@ public class BookRepositoryImpl implements BookRepository {
             stmt.setLong(1, bookId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                authors.add(new Author(rs.getLong("id"), rs.getString("name")));
+                authors.add(new Author(rs.getString("name")));
             }
         }
         return authors;
@@ -153,7 +154,7 @@ public class BookRepositoryImpl implements BookRepository {
             stmt.setLong(1, bookId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                genres.add(new Genre(rs.getLong("id"), rs.getString("genrename"), rs.getString("beschreibung")));
+                genres.add(new Genre(rs.getString("genrename"), rs.getString("beschreibung")));
             }
         }
         return genres;
@@ -176,7 +177,7 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void update(Book book) {
-        String sql = "UPDATE books SET title = ?, isbn = ?, isAvailable = ? WHERE id = ?";
+        String sql = "UPDATE books SET title = ?, isbn = ?, is_available = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, book.getTitle());
             stmt.setString(2, book.getIsbn());
@@ -212,14 +213,13 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void delete(Long id) {
-        String sql = "DELETE FROM books WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, id);
-            stmt.executeUpdate();
-
-            // Auch die Relationstabellen bereinigen
+        try {
             deleteBookAuthors(id);
             deleteBookGenres(id);
+            try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM books WHERE id = ?")) {
+                stmt.setLong(1, id);
+                stmt.executeUpdate();
+            }
         } catch (SQLException e) {
             throw new RuntimeException("❌ Fehler beim Löschen des Buches", e);
         }
