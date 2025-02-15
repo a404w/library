@@ -160,7 +160,6 @@ public class UserRepositoryImpl implements UserRepository {
         return users;
     }
 
-    @Override
     public User findByName(String name) {
         String sql = "SELECT * FROM users WHERE name = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -168,7 +167,7 @@ public class UserRepositoryImpl implements UserRepository {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Long userId = rs.getLong("id");
-                User user = new User(rs.getString("name"), rs.getString("email"), getBorrowedBooks(userId));
+                User user = new User(rs.getString("name"), rs.getString("email"));
                 user.setId(userId);
                 return user;
             }
