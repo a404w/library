@@ -125,7 +125,23 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
 
     // -- Reservationen
     public List<Reservation> getAllReservations() {
-        return reservationService.getAllReservations();
+        System.out.println("🔍 GraphQL Resolver: getAllReservations() wurde aufgerufen.");
+
+        List<Reservation> reservations = reservationService.getAllReservations();
+
+        if (reservations == null || reservations.isEmpty()) {
+            System.out.println("⚠️ Keine Reservierungen gefunden.");
+        } else {
+            System.out.println("✅ Anzahl gefundener Reservierungen: " + reservations.size());
+            for (Reservation res : reservations) {
+                System.out.println("🔹 Reservierung: ID=" + res.getId() +
+                        ", User=" + (res.getUser() != null ? res.getUser().getName() : "N/A") +
+                        ", Book=" + (res.getBook() != null ? res.getBook().getTitle() : "N/A") +
+                        ", Date=" + res.getReservationDate());
+            }
+        }
+
+        return reservations;
     }
 
     public Reservation getReservationById(Long id) {
@@ -175,9 +191,12 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     // -- Reservationen
-    public Reservation addReservation(Book book, User user) throws Exception {
-        return reservationService.reserveBook(book, user);
+    
+    public Reservation addReservation(Long bookId, Long userId) throws Exception {
+        return reservationService.reserveBook(bookId, userId);
     }
+
+
 
     public boolean deleteReservation(Long id) throws Exception {
         reservationService.cancelReservation(id);
@@ -185,7 +204,17 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     public boolean updateReservation(Reservation reservation) {
+        System.out.println("🔄 Update Reservation aufgerufen mit ID: " + reservation.getId());
+
+        Reservation existingReservation = reservationService.getReservationById(reservation.getId());
+        if (existingReservation == null) {
+            System.err.println("❌ Fehler: Reservierung mit ID " + reservation.getId() + " existiert nicht.");
+            return false; // Fehler, wenn die Reservierung nicht gefunden wurde
+        }
+
+        // Aktualisierung der Reservierung
         reservationService.updateReservation(reservation);
+        System.out.println("✅ Reservierung erfolgreich aktualisiert.");
         return true;
     }
 
@@ -234,5 +263,4 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return true;
     }
 
-    
 }

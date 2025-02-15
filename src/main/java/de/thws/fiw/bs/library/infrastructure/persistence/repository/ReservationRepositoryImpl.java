@@ -21,35 +21,68 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     @Override
     public Reservation save(Reservation reservation) {
         String sql = "INSERT INTO reservations (user_id, book_id, reservation_date) VALUES (?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setLong(1, reservation.getUser().getId());
-            stmt.setLong(2, reservation.getBook().getId());
-            stmt.setTimestamp(3, Timestamp.valueOf(reservation.getReservationDate()));
-            stmt.executeUpdate();
+        try {
+            connection.setAutoCommit(false); // Transaktion starten
 
-            // Set generated ID
-            ResultSet generatedKeys = stmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                reservation.setId(generatedKeys.getLong(1));
+            try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setLong(1, reservation.getUser().getId());
+                stmt.setLong(2, reservation.getBook().getId());
+                stmt.setTimestamp(3, Timestamp.valueOf(reservation.getReservationDate()));
+                stmt.executeUpdate();
+
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    reservation.setId(generatedKeys.getLong(1));
+                }
+
+                connection.commit();
+                return reservation;
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new RuntimeException("Fehler beim Speichern der Reservierung", e);
             }
-
-            return reservation;
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Speichern der Reservierung", e);
+            throw new RuntimeException("Datenbankfehler beim Speichern der Reservierung", e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ignored) {
+            }
         }
     }
 
     @Override
     public void update(Reservation reservation) {
         String sql = "UPDATE reservations SET user_id = ?, book_id = ?, reservation_date = ? WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, reservation.getUser().getId());
-            stmt.setLong(2, reservation.getBook().getId());
-            stmt.setTimestamp(3, Timestamp.valueOf(reservation.getReservationDate()));
-            stmt.setLong(4, reservation.getId());
-            stmt.executeUpdate();
+        try {
+            connection.setAutoCommit(false);
+            System.out.println("🔄 SQL Update wird ausgeführt für ID: " + reservation.getId());
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setLong(1, reservation.getUser().getId());
+                stmt.setLong(2, reservation.getBook().getId());
+                stmt.setTimestamp(3, Timestamp.valueOf(reservation.getReservationDate()));
+                stmt.setLong(4, reservation.getId());
+                int affectedRows = stmt.executeUpdate();
+
+                if (affectedRows == 0) {
+                    throw new RuntimeException(
+                            "❌ Fehler: Keine Reservierung mit ID " + reservation.getId() + " gefunden.");
+                }
+
+                connection.commit();
+                System.out.println("✅ SQL Update erfolgreich für ID: " + reservation.getId());
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new RuntimeException("Fehler beim Aktualisieren der Reservierung", e);
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Aktualisieren der Reservierung", e);
+            throw new RuntimeException("Datenbankfehler beim Aktualisieren der Reservierung", e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ignored) {
+            }
         }
     }
 
@@ -74,7 +107,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 return mapResultSetToReservation(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Abrufen der Reservierung", e);
+            throw new RuntimeException("Fehler beim Abrufen der Reservierung mit ID " + id, e);
         }
         return null;
     }
@@ -90,7 +123,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 reservations.add(mapResultSetToReservation(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Abrufen der Reservierungen eines Nutzers", e);
+            throw new RuntimeException("Fehler beim Abrufen der Reservierungen für User-ID " + userId, e);
         }
         return reservations;
     }
@@ -106,7 +139,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 reservations.add(mapResultSetToReservation(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Abrufen der Reservierungen eines Buches", e);
+            throw new RuntimeException("Fehler beim Abrufen der Reservierungen für Buch-ID " + bookId, e);
         }
         return reservations;
     }
@@ -116,7 +149,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         List<Reservation> reservations = new ArrayList<>();
         String sql = "SELECT * FROM reservations";
         try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 reservations.add(mapResultSetToReservation(rs));
             }
@@ -131,22 +164,20 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         Long userId = rs.getLong("user_id");
         Long bookId = rs.getLong("book_id");
         LocalDateTime reservationDate = rs.getTimestamp("reservation_date").toLocalDateTime();
-    
-        // ECHTE DATEN AUS DER DATENBANK HOLEN
+
         UserRepositoryImpl userRepo = new UserRepositoryImpl();
         BookRepositoryImpl bookRepo = new BookRepositoryImpl();
-        
+
         User user = userRepo.findById(userId);
         Book book = bookRepo.findById(bookId);
-    
-        // Falls Nutzer oder Buch nicht existieren, Fehler werfen
+
         if (user == null || book == null) {
-            throw new RuntimeException("Fehler: Buch oder Nutzer existiert nicht!");
+            throw new RuntimeException(
+                    "Fehler: Buch oder Nutzer existiert nicht! UserID=" + userId + ", BookID=" + bookId);
         }
-    
+
         Reservation reservation = new Reservation(user, book, reservationDate);
         reservation.setId(id);
         return reservation;
     }
-    
 }

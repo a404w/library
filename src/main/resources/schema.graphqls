@@ -56,7 +56,7 @@ type Mutation {
   updateLoan(loan: LoanInput!): Boolean
 
   # -- Reservationen
-  addReservation(book: BookInput!, user: UserInput!): Reservation
+  addReservation(bookId: ID!, userId: ID!): Reservation
   deleteReservation(id: ID!): Boolean
   updateReservation(reservation: ReservationInput!): Boolean
 

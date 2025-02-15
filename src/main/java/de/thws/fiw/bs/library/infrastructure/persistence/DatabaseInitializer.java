@@ -6,10 +6,9 @@ import java.sql.Statement;
 public class DatabaseInitializer {
     public static void initialize() {
         try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement()) {
+                Statement stmt = conn.createStatement()) {
 
-            String sql =
-                    "CREATE TABLE IF NOT EXISTS authors (" +
+            String sql = "CREATE TABLE IF NOT EXISTS authors (" +
                     "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
                     "name VARCHAR(255) NOT NULL); " +
 
@@ -53,17 +52,16 @@ public class DatabaseInitializer {
                     "to_date TIMESTAMP, " +
                     "PRIMARY KEY (user_id, book_id), " +
                     "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
-                    "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE); "+
-
+                    "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE); " +
 
                     // **Verknüpfungstabelle für Reservierungen (User ↔ Books)**
                     "CREATE TABLE IF NOT EXISTS reservations (" +
-                    "user_id BIGINT, " +
-                    "book_id BIGINT, " +
-                    "reservation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                    "PRIMARY KEY (user_id, book_id), " +
-                    "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
-                    "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE); ";
+                    "    id BIGINT AUTO_INCREMENT PRIMARY KEY, " + // ✅ ID hinzugefügt
+                    "    user_id BIGINT, " +
+                    "    book_id BIGINT, " +
+                    "    reservation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                    "    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
+                    "    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE); ";
 
             stmt.executeUpdate(sql);
 
@@ -78,4 +76,3 @@ public class DatabaseInitializer {
         initialize();
     }
 }
-
