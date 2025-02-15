@@ -42,7 +42,9 @@ public class GraphQLHandler {
 
             // Schema laden
             InputStream schemaStream = GraphQLHandler.class.getClassLoader().getResourceAsStream("schema.graphqls");
-            if (schemaStream == null) throw new RuntimeException("Schema-Datei nicht gefunden!");
+            if (schemaStream == null) {
+                throw new RuntimeException("❌ Fehler: Schema-Datei `schema.graphqls` nicht gefunden! Stelle sicher, dass sie in `src/main/resources/` liegt.");
+            }
             Reader schemaReader = new InputStreamReader(schemaStream, StandardCharsets.UTF_8);
 
             // GraphQL-Schema parsen
@@ -97,8 +99,17 @@ public class GraphQLHandler {
         return graphQL;
     }
     public static String handleRequest(String query) {
-        return graphQL.execute(query).toSpecification().toString();
+        System.out.println("📥 Empfange GraphQL Anfrage: " + query);
+        
+        // Anfrage an GraphQL senden
+        String response = graphQL.execute(query).toSpecification().toString();
+    
+        // Debugging: Antwort ausgeben
+        System.out.println("📤 Antwort von GraphQL: " + response);
+    
+        return response;
     }
+    
     public static GraphQLSchema getGraphQLSchema() {
         return graphQL.getGraphQLSchema();
     }

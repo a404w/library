@@ -4,6 +4,7 @@ import de.thws.fiw.bs.library.domain.model.Loan;
 import de.thws.fiw.bs.library.domain.model.Book;
 import de.thws.fiw.bs.library.domain.model.User;
 import de.thws.fiw.bs.library.domain.ports.LoanRepository;
+import de.thws.fiw.bs.library.infrastructure.persistence.repository.LoanRepositoryImpl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +16,9 @@ public class LoanService {
     public LoanService(LoanRepository loanRepository) {
         this.loanRepository = loanRepository;
     }
-
+    public LoanService() {
+        this.loanRepository = new LoanRepositoryImpl(null, null);
+    }
     public Loan addLoan(Book book, User user) {
         return loanRepository.save(new Loan(book, user, LocalDate.now(), LocalDate.now().plusDays(14)));
     }
