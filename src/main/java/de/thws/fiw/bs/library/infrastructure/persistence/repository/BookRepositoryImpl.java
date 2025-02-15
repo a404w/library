@@ -126,8 +126,9 @@ public class BookRepositoryImpl implements BookRepository {
         // Autoren und Genres für das Buch abrufen
         Set<Author> authors = getAuthorsForBook(bookId);
         Set<Genre> genres = getGenresForBook(bookId);
-
-        return new Book(title, isbn, genres, authors, isAvailable);
+        Book b = new Book(title, isbn, genres, authors, isAvailable);
+        b.setId(bookId);
+        return b;
     }
 
     private Set<Author> getAuthorsForBook(Long bookId) throws SQLException {
