@@ -30,7 +30,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 
             return author;
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Speichern des Autors", e);
+            throw new RuntimeException("Fehler beim Speichern des Autors", e);
         }
     }
 
@@ -42,7 +42,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             stmt.setLong(2, author.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Aktualisieren des Autors", e);
+            throw new RuntimeException("Fehler beim Aktualisieren des Autors", e);
         }
     }
 
@@ -53,7 +53,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Löschen des Autors", e);
+            throw new RuntimeException("Fehler beim Löschen des Autors", e);
         }
     }
 
@@ -67,7 +67,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
                 return new Author(rs.getString("name"));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen des Autors", e);
+            throw new RuntimeException("Fehler beim Abrufen des Autors", e);
         }
         return null;
     }
@@ -82,7 +82,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
                 authors.add(new Author(rs.getString("name")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen aller Autoren", e);
+            throw new RuntimeException("Fehler beim Abrufen aller Autoren", e);
         }
         return authors;
     }
@@ -98,7 +98,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
                 authors.add(new Author(rs.getString("name")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Suchen nach Autoren", e);
+            throw new RuntimeException("Fehler beim Suchen nach Autoren", e);
         }
         return authors;
     }

@@ -14,7 +14,7 @@ public class Author {
 
     public Author() {
 
-    } // Standard-Konstruktor für JPA/Hibernate
+    }
 
     public Author(String name) {
         this.name = name;

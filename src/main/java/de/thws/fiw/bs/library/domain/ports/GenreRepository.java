@@ -4,15 +4,15 @@ import de.thws.fiw.bs.library.domain.model.Genre;
 import java.util.List;
 
 public interface GenreRepository {
-    Genre save(Genre genre); // Speichert ein neues Genre
+    Genre save(Genre genre);
 
     void update(Genre genre);
 
-    void delete(Long id); // Löscht ein Genre nach ID
+    void delete(Long id); 
 
     Genre findById(Long id);
 
-    Genre findByName(String name); // Findet Genres nach Name
+    Genre findByName(String name); 
 
-    List<Genre> findAll(); // Gibt alle Genres zurück
+    List<Genre> findAll(); 
 }

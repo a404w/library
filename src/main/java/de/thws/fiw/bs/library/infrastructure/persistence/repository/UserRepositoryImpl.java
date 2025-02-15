@@ -33,7 +33,7 @@ public class UserRepositoryImpl implements UserRepository {
             saveBorrowedBooks(user);
             return user;
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Speichern des Benutzers", e);
+            throw new RuntimeException("Fehler beim Speichern des Benutzers", e);
         }
     }
 
@@ -50,7 +50,7 @@ public class UserRepositoryImpl implements UserRepository {
             deleteBorrowedBooks(user.getId());
             saveBorrowedBooks(user);
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Aktualisieren des Benutzers", e);
+            throw new RuntimeException("Fehler beim Aktualisieren des Benutzers", e);
         }
     }
 
@@ -62,7 +62,7 @@ public class UserRepositoryImpl implements UserRepository {
             stmt.executeUpdate();
             deleteBorrowedBooks(id); // Remove book relations
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Löschen des Benutzers", e);
+            throw new RuntimeException("Fehler beim Löschen des Benutzers", e);
         }
     }
 
@@ -80,7 +80,7 @@ public class UserRepositoryImpl implements UserRepository {
                 );
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen des Benutzers", e);
+            throw new RuntimeException("Fehler beim Abrufen des Benutzers", e);
         }
         return null;
     }
@@ -99,7 +99,7 @@ public class UserRepositoryImpl implements UserRepository {
                 ));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen aller Benutzer", e);
+            throw new RuntimeException("Fehler beim Abrufen aller Benutzer", e);
         }
         return users;
     }
@@ -118,7 +118,7 @@ public class UserRepositoryImpl implements UserRepository {
                 );
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen des Benutzers nach Name", e);
+            throw new RuntimeException("Fehler beim Abrufen des Benutzers nach Name", e);
         }
         return null;
     }

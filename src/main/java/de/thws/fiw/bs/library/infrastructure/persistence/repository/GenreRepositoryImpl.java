@@ -31,7 +31,7 @@ public class GenreRepositoryImpl implements GenreRepository {
 
             return genre;
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Speichern des Genres", e);
+            throw new RuntimeException("Fehler beim Speichern des Genres", e);
         }
     }
 
@@ -44,7 +44,7 @@ public class GenreRepositoryImpl implements GenreRepository {
             stmt.setLong(3, genre.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Aktualisieren des Genres", e);
+            throw new RuntimeException("Fehler beim Aktualisieren des Genres", e);
         }
     }
 
@@ -55,7 +55,7 @@ public class GenreRepositoryImpl implements GenreRepository {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Löschen des Genres", e);
+            throw new RuntimeException("Fehler beim Löschen des Genres", e);
         }
     }
 
@@ -69,7 +69,7 @@ public class GenreRepositoryImpl implements GenreRepository {
                 return new Genre(rs.getString("genrename"), rs.getString("beschreibung"));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen des Genres", e);
+            throw new RuntimeException("Fehler beim Abrufen des Genres", e);
         }
         return null;
     }
@@ -84,7 +84,7 @@ public class GenreRepositoryImpl implements GenreRepository {
                 return new Genre(rs.getString("genrename"), rs.getString("beschreibung"));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Suchen nach Genre", e);
+            throw new RuntimeException("Fehler beim Suchen nach Genre", e);
         }
         return null;
     }
@@ -99,7 +99,7 @@ public class GenreRepositoryImpl implements GenreRepository {
                 genres.add(new Genre(rs.getString("genrename"), rs.getString("beschreibung")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen aller Genres", e);
+            throw new RuntimeException("Fehler beim Abrufen aller Genres", e);
         }
         return genres;
     }

@@ -16,12 +16,20 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation reserveBook(Book book, User user) {
-        return reservationRepository.save(new Reservation(user, book, LocalDateTime.now())); // Reservierung speichern
+    public Reservation reserveBook(Book book, User user) throws Exception {
+        if (!book.isAvailable()) {
+            throw new Exception("Buch wurde bereits reserviert oder ausgeliehen.");
+        }
+        book.setAvailable(false);
+        return reservationRepository.save(new Reservation(user, book, LocalDateTime.now()));
     }
 
-    public void cancelReservation(Long reservationId) {
-        reservationRepository.delete(reservationId); // Reservierung stornieren
+    public void cancelReservation(Long reservationId) throws Exception {
+        if (getReservationById(reservationId).getBook().isAvailable()) {
+            throw new Exception("Buch wurde nie Reserviert.");
+        }
+        getReservationById(reservationId).getBook().setAvailable(true);
+        reservationRepository.delete(reservationId);
     }
 
     public void updateReservation(Reservation reservation) {
@@ -33,11 +41,11 @@ public class ReservationService {
     }
 
     public List<Reservation> getReservationsByUser(Long userId) {
-        return reservationRepository.findByUserId(userId); // Alle Reservierungen eines Nutzers
+        return reservationRepository.findByUserId(userId);
     }
 
     public List<Reservation> getReservationsByBook(Long bookId) {
-        return reservationRepository.findByBookId(bookId); // Alle Reservierungen eines Buches
+        return reservationRepository.findByBookId(bookId);
     }
 
     public List<Reservation> getAllReservations() {

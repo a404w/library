@@ -5,15 +5,15 @@ import de.thws.fiw.bs.library.domain.model.Author;
 import java.util.List;
 
 public interface AuthorRepository {
-    Author save(Author author); // Speichert einen neuen Author
+    Author save(Author author); 
 
     void update(Author author);
 
-    void delete(Long id); // Löscht einen Author nach ID
+    void delete(Long id); 
 
-    Author findById(Long id); // Findet einen Author nach ID
+    Author findById(Long id); 
 
-    List<Author> findAll(); // Gibt alle Autoren zurück
+    List<Author> findAll(); 
 
     List<Author> getAuthorsByName(String name);
 }
