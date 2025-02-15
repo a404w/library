@@ -140,12 +140,18 @@ public class BookRepositoryImpl implements BookRepository {
             stmt.setLong(1, bookId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                authors.add(new Author(rs.getString("name")));
+                Long authorId = rs.getLong("id");  // ID auslesen
+                String authorName = rs.getString("name");
+    
+                Author author = new Author(authorName);
+                author.setId(authorId);  // ID setzen!
+    
+                authors.add(author);
             }
         }
         return authors;
     }
-
+    
     private Set<Genre> getGenresForBook(Long bookId) throws SQLException {
         Set<Genre> genres = new HashSet<>();
         String sql = "SELECT g.id, g.genrename, g.beschreibung FROM genres g " +
@@ -155,11 +161,19 @@ public class BookRepositoryImpl implements BookRepository {
             stmt.setLong(1, bookId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                genres.add(new Genre(rs.getString("genrename"), rs.getString("beschreibung")));
+                Long genreId = rs.getLong("id");  // ID auslesen
+                String genreName = rs.getString("genrename");
+                String genreDesc = rs.getString("beschreibung");
+    
+                Genre genre = new Genre(genreName, genreDesc);
+                genre.setId(genreId);  // ID setzen!
+    
+                genres.add(genre);
             }
         }
         return genres;
     }
+    
 
     @Override
     public List<Book> findAll() {

@@ -138,9 +138,8 @@ input BookInput {
   title: String!
   isbn: String!
   isAvailable: Boolean!
-  # Falls du Genres/Authors hier direkt setzen willst, könntest du auch:
-  # genres: [GenreInput!]
-  # authors: [AuthorInput!]
+  authors: [ID!] 
+  genres: [ID!] 
 }
 
 input UserInput {
