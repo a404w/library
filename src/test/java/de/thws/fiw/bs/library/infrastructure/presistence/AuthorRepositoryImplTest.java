@@ -51,7 +51,7 @@ class AuthorRepositoryImplTest {
     void testFindById() throws Exception {
         Long realId = null;
 
-        // Tatsächliche ID ermitteln
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT id FROM authors LIMIT 1")) {
             if (rs.next()) {
@@ -64,7 +64,7 @@ class AuthorRepositoryImplTest {
 
         assertNotNull(realId, " Die ID darf nicht null sein!");
 
-        // Author suchen
+
         Author author = authorRepository.findById(realId);
         assertNotNull(author, " Der Autor sollte existieren!");
         System.out.println(" Gefundener Autor: " + author.getName());
@@ -99,7 +99,7 @@ class AuthorRepositoryImplTest {
     void testUpdateAuthor() throws Exception {
         Long realId = null;
 
-        // Tatsächliche ID ermitteln
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT id FROM authors LIMIT 1")) {
             if (rs.next()) {
@@ -112,12 +112,12 @@ class AuthorRepositoryImplTest {
 
         assertNotNull(realId, " Die ID darf nicht null sein!");
 
-        // Author aktualisieren
+
         Author author = new Author("Updated Author");
         author.setId(realId);
         authorRepository.update(author);
 
-        // Aktualisierten Autor abrufen
+
         Author updatedAuthor = authorRepository.findById(realId);
         assertNotNull(updatedAuthor, " Der aktualisierte Autor sollte existieren!");
         assertEquals("Updated Author", updatedAuthor.getName());
@@ -129,7 +129,7 @@ class AuthorRepositoryImplTest {
     void testDeleteAuthor() throws Exception {
         Long realId = null;
 
-        // Tatsächliche ID ermitteln
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT id FROM authors LIMIT 1")) {
             if (rs.next()) {
@@ -142,10 +142,10 @@ class AuthorRepositoryImplTest {
 
         assertNotNull(realId, " Die ID darf nicht null sein!");
 
-        // Autor löschen
+
         authorRepository.delete(realId);
 
-        // Prüfen, ob der Autor gelöscht wurde
+
         Author deletedAuthor = authorRepository.findById(realId);
         assertNull(deletedAuthor, " Der Autor sollte gelöscht sein!");
         System.out.println(" Autor mit ID=" + realId + " erfolgreich gelöscht.");

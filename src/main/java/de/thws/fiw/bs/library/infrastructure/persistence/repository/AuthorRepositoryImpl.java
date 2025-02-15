@@ -22,7 +22,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             stmt.setString(1, author.getName());
             stmt.executeUpdate();
 
-            // ID aus der Datenbank abrufen
+
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 author.setId(generatedKeys.getLong(1));
@@ -67,7 +67,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
                 Long authorId = rs.getLong("id");
                 String name = rs.getString("name");
                 Author author = new Author(name);
-                author.setId(authorId); // ID setzen
+                author.setId(authorId); 
                 return author;
             }
         } catch (SQLException e) {
@@ -83,15 +83,13 @@ public class AuthorRepositoryImpl implements AuthorRepository {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                // ID und Name auslesen
+
                 Long id = rs.getLong("id");
                 String name = rs.getString("name");
     
-                // Domain-Objekt erzeugen und ID setzen
                 Author author = new Author(name);
                 author.setId(id);
     
-                // In die Liste packen
                 authors.add(author);
             }
         } catch (SQLException e) {
@@ -108,15 +106,15 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             stmt.setString(1, "%" + name + "%");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                // ID und Name auslesen
+                
                 long authorId = rs.getLong("id");
                 String authorName = rs.getString("name");
     
-                // Domain-Objekt erzeugen und ID setzen
+                
                 Author author = new Author(authorName);
                 author.setId(authorId);
     
-                // In die Liste packen
+                
                 authors.add(author);
             }
         } catch (SQLException e) {

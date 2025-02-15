@@ -3,9 +3,7 @@ schema {
   mutation: Mutation
 }
 
-# -----------------------------
-# QUERIES
-# -----------------------------
+
 type Query {
   # -- Bücher
   getBooks: [Book!]!
@@ -41,9 +39,7 @@ type Query {
   getReservationByBook(bookId: ID!): [Reservation!]!
 }
 
-# -----------------------------
-# MUTATIONS
-# -----------------------------
+
 type Mutation {
   # -- Bücher
   addBook(book: BookInput!): Book
@@ -76,9 +72,7 @@ type Mutation {
   deleteGenre(id: ID!): Boolean
 }
 
-# ----------------------------------------------------------------------------
-# OUTPUT-Typen (werden von Queries/Mutations zurückgegeben)
-# ----------------------------------------------------------------------------
+
 
 type Book {
   id: ID!
@@ -124,15 +118,8 @@ type Genre {
   books: [Book]
 }
 
-# ----------------------------------------------------------------------------
-# INPUT-Typen (werden in Mutations als Argumente benutzt)
-# ----------------------------------------------------------------------------
 
-"""
-BookInput wird in addBook(book: BookInput!) usw. verwendet.
-So kann 'book' bei der Mutation kein 'type Book' mehr sein,
-sondern korrekt ein Input-Objekt.
-"""
+
 input BookInput {
   id: ID
   title: String!

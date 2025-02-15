@@ -22,7 +22,7 @@ class GenreRepositoryImplTest {
     @BeforeAll
     void setUpDatabase() throws Exception {
         connection = DatabaseConnection.getConnection();
-        DatabaseInitializer.initialize(); // Tabellen erstellen
+        DatabaseInitializer.initialize(); 
         genreRepository = new GenreRepositoryImpl();
     }
 
@@ -77,7 +77,7 @@ class GenreRepositoryImplTest {
     void testFindById() throws Exception {
         Long realId = null;
         
-        // Richtig eingefügte ID herausfinden
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT id FROM genres LIMIT 1")) {
             if (rs.next()) {
@@ -112,7 +112,7 @@ class GenreRepositoryImplTest {
     void testUpdateGenre() throws Exception {
         Long realId = null;
     
-        // Tatsächliche ID ermitteln
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT id FROM genres LIMIT 1")) {
             if (rs.next()) {
@@ -125,12 +125,12 @@ class GenreRepositoryImplTest {
     
         assertNotNull(realId, " Die ID darf nicht null sein!");
     
-        // Genre aktualisieren
+
         Genre genre = new Genre("Updated Genre", "Updated Beschreibung");
         genre.setId(realId);
         genreRepository.update(genre);
     
-        // Aktualisiertes Genre abrufen
+
         Genre updatedGenre = genreRepository.findById(realId);
         assertNotNull(updatedGenre, " Das aktualisierte Genre sollte existieren!");
         assertEquals("Updated Genre", updatedGenre.getGenrename());

@@ -22,9 +22,7 @@ public class GraphQLServlet extends GraphQLHttpServlet {
 
     static {
         try {
-            // ---------------------------------------------------------------
-            // 1) Repositories anlegen
-            // ---------------------------------------------------------------
+            
             BookRepository bookRepository = new BookRepositoryImpl();
             UserRepository userRepository = new UserRepositoryImpl();
             LoanRepository loanRepository = new LoanRepositoryImpl(bookRepository, userRepository);
@@ -32,9 +30,7 @@ public class GraphQLServlet extends GraphQLHttpServlet {
             AuthorRepository authorRepository = new AuthorRepositoryImpl();
             GenreRepository genreRepository = new GenreRepositoryImpl();
 
-            // ---------------------------------------------------------------
-            // 2) Services anlegen
-            // ---------------------------------------------------------------
+
             BookService bookService = new BookService();
             UserService userService = new UserService();
             LoanService loanService = new LoanService(loanRepository);
@@ -42,9 +38,7 @@ public class GraphQLServlet extends GraphQLHttpServlet {
             AuthorService authorService = new AuthorService(authorRepository);
             GenreService genreService = new GenreService(genreRepository);
 
-            // ---------------------------------------------------------------
-            // 3) Resolver anlegen
-            // ---------------------------------------------------------------
+            
             GraphQLResolvers resolvers = new GraphQLResolvers(
                 bookService,
                 loanService,
@@ -54,26 +48,20 @@ public class GraphQLServlet extends GraphQLHttpServlet {
                 authorService
             );
 
-            // ---------------------------------------------------------------
-            // 4) Schema aus der Datei "schema.graphqls" laden und parsen
-            // ---------------------------------------------------------------
-            // Stelle sicher, dass "schema.graphqls" in deinem "resources"-Ordner liegt.
+
             InputStream schemaStream = GraphQLServlet.class
                     .getResourceAsStream("/schema.graphqls");
             if (schemaStream == null) {
                 throw new RuntimeException("❌ Die Datei 'schema.graphqls' wurde nicht gefunden!");
             }
 
-            // Parser bauen und Resolver registrieren
             GraphQLSchema graphQLSchema = SchemaParser.newParser()
                     .file("schema.graphqls")
                     .resolvers(resolvers)
                     .build()
                     .makeExecutableSchema();
 
-            // ---------------------------------------------------------------
-            // 5) GraphQLConfiguration erstellen
-            // ---------------------------------------------------------------
+            
             configuration = GraphQLConfiguration
                     .with(graphQLSchema)
                     .build();
@@ -85,9 +73,9 @@ public class GraphQLServlet extends GraphQLHttpServlet {
 
     @Override
     protected GraphQLConfiguration getConfiguration() {
-        // Hier wird das vorab erstellte Schema (und Resolvers) an das Framework übergeben.
+        
         return configuration;
     }
 
-    // KEIN doPost() oder doGet() überschreiben – das macht GraphQLHttpServlet automatisch.
+    
 }

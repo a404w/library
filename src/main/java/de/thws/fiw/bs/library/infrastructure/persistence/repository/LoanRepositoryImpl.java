@@ -32,7 +32,7 @@ public class LoanRepositoryImpl implements LoanRepository {
             stmt.setLong(2, loan.getUser().getId());
             stmt.setTimestamp(3, Timestamp.valueOf(loan.getFrom().atStartOfDay())); // from_date als Timestamp speichern
             
-            // NULL-Werte für `to_date` behandeln
+
             if (loan.getTo() != null) {
                 stmt.setTimestamp(4, Timestamp.valueOf(loan.getTo().atStartOfDay()));
             } else {
@@ -41,7 +41,7 @@ public class LoanRepositoryImpl implements LoanRepository {
 
             stmt.executeUpdate();
 
-            // Automatisch generierte ID abrufen
+
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 loan.setId(generatedKeys.getLong(1));
@@ -149,11 +149,11 @@ public class LoanRepositoryImpl implements LoanRepository {
 
         LocalDate fromDate = rs.getTimestamp("from_date").toLocalDateTime().toLocalDate();
 
-        // `to_date` kann NULL sein, also prüfen
+    
         Timestamp toTimestamp = rs.getTimestamp("to_date");
         LocalDate toDate = (toTimestamp != null) ? toTimestamp.toLocalDateTime().toLocalDate() : null;
 
-        // Buch und Nutzer laden
+    
         Book book = bookRepository.findById(bookId);
         User user = userRepository.findById(userId);
 

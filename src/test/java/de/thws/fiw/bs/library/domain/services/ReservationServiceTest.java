@@ -80,7 +80,7 @@ class ReservationServiceTest {
         assertNotNull(reservation);
         assertEquals(book, reservation.getBook());
         assertEquals(user, reservation.getUser());
-        assertFalse(book.isAvailable()); // Buch sollte nicht mehr verfügbar sein
+        assertFalse(book.isAvailable());
     }
 
     @Test
@@ -160,7 +160,7 @@ class ReservationServiceTest {
         User user = new User("Henry", "henry@example.com", null);
         Reservation reservation = reservationService.reserveBook(book, user);
 
-        book.setAvailable(true); // Setzt Buch wieder verfügbar, um Fehler auszulösen
+        book.setAvailable(true);
 
         Exception exception = assertThrows(Exception.class,
                 () -> reservationService.cancelReservation(reservation.getId()));

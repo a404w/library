@@ -11,7 +11,7 @@ public class GraphQLServer {
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
             context.setContextPath("/");
             
-            // Servlet direkt über die Klasse registrieren
+            
             ServletHolder servletHolder = new ServletHolder(new GraphQLServlet());
             context.addServlet(servletHolder, "/graphql");
 

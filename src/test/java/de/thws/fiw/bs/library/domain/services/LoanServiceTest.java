@@ -80,7 +80,7 @@ class LoanServiceTest {
         assertNotNull(loan);
         assertEquals(book, loan.getBook());
         assertEquals(user, loan.getUser());
-        assertFalse(book.isAvailable()); // Buch sollte nicht mehr verfügbar sein
+        assertFalse(book.isAvailable());
     }
 
     @Test
@@ -160,7 +160,7 @@ class LoanServiceTest {
         User user = new User("Henry", "henry@example.com", null);
         Loan loan = loanService.addLoan(book, user);
 
-        book.setAvailable(true); // Setzt Buch wieder verfügbar, um Fehler auszulösen
+        book.setAvailable(true);
 
         Exception exception = assertThrows(Exception.class, () -> loanService.deleteLoan(loan.getId()));
         assertEquals("Buch wurde noch nicht ausgeliehen oder reserviert.", exception.getMessage());

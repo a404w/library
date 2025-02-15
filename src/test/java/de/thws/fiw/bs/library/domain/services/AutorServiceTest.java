@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AuthorServiceTest {
 
     private AuthorService authorService;
-    private List<Author> authors; // Direkte Speicherung ohne Repository-Klasse
+    private List<Author> authors; 
 
     @BeforeEach
     void setUp() {
@@ -21,7 +21,7 @@ class AuthorServiceTest {
         authorService = new AuthorService(new AuthorRepository() {
             @Override
             public Author save(Author author) {
-                author.setId((long) (authors.size() + 1)); // Simuliert eine Datenbank-ID
+                author.setId((long) (authors.size() + 1)); 
                 authors.add(author);
                 return author;
             }
@@ -66,7 +66,7 @@ class AuthorServiceTest {
     @Test
     void addAuthor_ShouldSaveAuthor() {
         Author author = authorService.addAuthor("J.K. Rowling");
-        assertNotNull(author.getId()); // Die ID sollte gesetzt sein
+        assertNotNull(author.getId()); 
         assertEquals("J.K. Rowling", author.getName());
     }
 

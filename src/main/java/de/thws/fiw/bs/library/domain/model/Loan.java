@@ -3,7 +3,7 @@ package de.thws.fiw.bs.library.domain.model;
 import java.time.LocalDate;
 
 public class Loan {
-    private Long id; // Die ID wird von der Datenbank generiert
+    private Long id; 
     private Book book;
     private User user;
     private LocalDate from;
@@ -19,7 +19,7 @@ public class Loan {
         this.to = to;
     }
 
-    // Getter und Setter
+  
     public Long getId() {
         return id;
     }

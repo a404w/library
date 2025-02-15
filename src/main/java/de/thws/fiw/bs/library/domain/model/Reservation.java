@@ -3,7 +3,7 @@ package de.thws.fiw.bs.library.domain.model;
 import java.time.LocalDateTime;
 
 public class Reservation {
-    private Long id; // Die ID wird von der Datenbank generiert
+    private Long id; 
     private User user;
     private Book book;
     private LocalDateTime reservationDate;
@@ -17,7 +17,7 @@ public class Reservation {
         this.reservationDate = reservationDate;
     }
 
-    // Getter und Setter
+    
     public Long getId() {
         return id;
     }

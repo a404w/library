@@ -15,7 +15,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     private final AuthorService authorService;
     private final GenreService genreService;
 
-    // Im Konstruktor alle Services entgegennehmen
+ 
     public GraphQLResolvers(
             BookService bookService,
             LoanService loanService,
@@ -31,11 +31,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         this.authorService = authorService;
     }
 
-    // ----------------------------------------------------------------------------
-    // QUERIES
-    // ----------------------------------------------------------------------------
-
-    // -- Bücher
+    
     public List<Book> getBooks() {
         return bookService.getAllBooks();
     }
@@ -52,7 +48,6 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return bookService.getBooksByAuthorId(id);
     }
 
-    // -- Benutzer
     public List<User> getUsers() {
         return userService.getAllUsers();
     }
@@ -70,7 +65,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
                     + user.getName() + ", Email=" + user.getEmail());
         }
 
-        // ❗ TEST: Setze borrowedBooks auf null, um Serialisierungsprobleme zu testen
+       
         user.setBorrowedBooks(null);
 
         return user;
@@ -80,7 +75,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return userService.getUserByName(name);
     }
 
-    // -- Ausleihen/Loans
+
     public List<Loan> getLoans() {
         return loanService.getAllLoans();
     }
@@ -97,7 +92,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return loanService.getLoansByBook(bookId);
     }
 
-    // -- Autoren
+
     public List<Author> getAllAuthors() {
         return authorService.getAllAuthors();
     }
@@ -110,7 +105,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return authorService.getAuthorsByName(name);
     }
 
-    // -- Genres
+
     public List<Genre> getAllGenres() {
         return genreService.getAllGenres();
     }
@@ -123,7 +118,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return genreService.getGenresByName(name);
     }
 
-    // -- Reservationen
+
     public List<Reservation> getAllReservations() {
         return reservationService.getAllReservations();
     }
@@ -140,11 +135,6 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return reservationService.getReservationsByBook(bookId);
     }
 
-    // ----------------------------------------------------------------------------
-    // MUTATIONS
-    // ----------------------------------------------------------------------------
-
-    // -- Bücher
     public Book addBook(Book book) {
         return bookService.addBook(book);
     }
@@ -159,7 +149,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return true;
     }
 
-    // -- Ausleihen
+
     public Loan addLoan(Book book, User user) throws Exception {
         return loanService.addLoan(book, user);
     }
@@ -174,7 +164,8 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return true;
     }
 
-    // -- Reservationen
+
+
     public Reservation addReservation(Book book, User user) throws Exception {
         return reservationService.reserveBook(book, user);
     }
@@ -189,7 +180,8 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return true;
     }
 
-    // -- User
+
+
     public User addUser(String name, String email) {
         return userService.addUser(name, email);
     }
@@ -204,7 +196,8 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return true;
     }
 
-    // -- Autor
+
+
     public Author addAuthor(String name) {
         return authorService.addAuthor(name);
     }
@@ -219,7 +212,8 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return true;
     }
 
-    // -- Genre
+
+    
     public Genre addGenre(String genrename, String beschreibung) {
         return genreService.addGenre(genrename, beschreibung);
     }

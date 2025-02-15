@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GenreServiceTest {
 
     private GenreService genreService;
-    private List<Genre> genres; // Direkte Speicherung ohne Repository-Klasse
+    private List<Genre> genres;
 
     @BeforeEach
     void setUp() {
@@ -21,7 +21,7 @@ class GenreServiceTest {
         genreService = new GenreService(new GenreRepository() {
             @Override
             public Genre save(Genre genre) {
-                genre.setId((long) (genres.size() + 1)); // Simulierte Datenbank-ID
+                genre.setId((long) (genres.size() + 1));
                 genres.add(genre);
                 return genre;
             }
@@ -63,7 +63,7 @@ class GenreServiceTest {
     @Test
     void addGenre_ShouldSaveGenre() {
         Genre genre = genreService.addGenre("Fantasy", "Fantasy-Bücher");
-        assertNotNull(genre.getId()); // Die ID sollte gesetzt sein
+        assertNotNull(genre.getId());
         assertEquals("Fantasy", genre.getGenrename());
     }
 

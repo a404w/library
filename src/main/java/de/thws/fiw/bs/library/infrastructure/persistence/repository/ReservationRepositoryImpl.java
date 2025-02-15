@@ -27,7 +27,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             stmt.setTimestamp(3, Timestamp.valueOf(reservation.getReservationDate()));
             stmt.executeUpdate();
 
-            // Set generated ID
+            
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 reservation.setId(generatedKeys.getLong(1));
@@ -132,14 +132,14 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         Long bookId = rs.getLong("book_id");
         LocalDateTime reservationDate = rs.getTimestamp("reservation_date").toLocalDateTime();
     
-        // ECHTE DATEN AUS DER DATENBANK HOLEN
+    
         UserRepositoryImpl userRepo = new UserRepositoryImpl();
         BookRepositoryImpl bookRepo = new BookRepositoryImpl();
         
         User user = userRepo.findById(userId);
         Book book = bookRepo.findById(bookId);
     
-        // Falls Nutzer oder Buch nicht existieren, Fehler werfen
+    
         if (user == null || book == null) {
             throw new RuntimeException("Fehler: Buch oder Nutzer existiert nicht!");
         }

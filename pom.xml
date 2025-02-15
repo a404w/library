@@ -19,14 +19,13 @@
     </properties>
 
   <dependencies>
-    <!-- JUnit 5 (Jupiter) für Tests -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>5.9.2</version>
       <scope>test</scope>
     </dependency>
-    <!-- GraphQL Servlet -->
+
     <dependency>
         <groupId>com.graphql-java-kickstart</groupId>
         <artifactId>graphql-java-servlet</artifactId>
@@ -39,7 +38,7 @@
         <version>${jakarta.servlet-api.version}</version>
     </dependency>
 
-    <!-- GraphQL Tools -->
+
     <dependency>
         <groupId>com.graphql-java-kickstart</groupId>
         <artifactId>graphql-java-tools</artifactId>
@@ -52,7 +51,6 @@
         <version>20.4</version>
     </dependency>
 
-    <!-- Jetty für Standalone Webserver -->
     <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
@@ -63,7 +61,7 @@
         <artifactId>jetty-ee10-servlet</artifactId>
         <version>${jetty.version}</version>
     </dependency>
-    <!-- H2 Database Driver -->
+
     <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>

@@ -33,6 +33,6 @@ public class GenreService {
     }
 
     public void deleteGenre(Long id) {
-        genreRepository.delete(id); // Genre löschen
+        genreRepository.delete(id); 
     }
 }

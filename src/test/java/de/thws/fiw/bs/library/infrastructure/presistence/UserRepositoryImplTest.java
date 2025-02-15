@@ -51,7 +51,7 @@ class UserRepositoryImplTest {
     void testFindById() throws Exception {
         Long realId = null;
 
-        // Tatsächliche ID ermitteln
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT id FROM users LIMIT 1")) {
             if (rs.next()) {
@@ -64,7 +64,7 @@ class UserRepositoryImplTest {
 
         assertNotNull(realId, " Die ID darf nicht null sein!");
 
-        // Benutzer suchen
+
         User user = userRepository.findById(realId);
         assertNotNull(user, " Der Benutzer sollte existieren!");
         System.out.println("🔍 Gefundener Benutzer: " + user.getName());
@@ -99,7 +99,7 @@ class UserRepositoryImplTest {
     void testUpdateUser() throws Exception {
         Long realId = null;
 
-        // Tatsächliche ID ermitteln
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT id FROM users LIMIT 1")) {
             if (rs.next()) {
@@ -112,12 +112,10 @@ class UserRepositoryImplTest {
 
         assertNotNull(realId, " Die ID darf nicht null sein!");
 
-        // Benutzer aktualisieren
         User user = new User("Updated Alice", "alice.new@example.com");
         user.setId(realId);
         userRepository.update(user);
 
-        // Aktualisierten Benutzer abrufen
         User updatedUser = userRepository.findById(realId);
         assertNotNull(updatedUser, " Der aktualisierte Benutzer sollte existieren!");
         assertEquals("Updated Alice", updatedUser.getName());
@@ -129,7 +127,6 @@ class UserRepositoryImplTest {
     void testDeleteUser() throws Exception {
         Long realId = null;
 
-        // Tatsächliche ID ermitteln
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT id FROM users LIMIT 1")) {
             if (rs.next()) {
@@ -142,10 +139,8 @@ class UserRepositoryImplTest {
 
         assertNotNull(realId, " Die ID darf nicht null sein!");
 
-        // Benutzer löschen
         userRepository.delete(realId);
 
-        // Prüfen, ob der Benutzer gelöscht wurde
         User deletedUser = userRepository.findById(realId);
         assertNull(deletedUser, " Der Benutzer sollte gelöscht sein!");
         System.out.println(" Benutzer mit ID=" + realId + " erfolgreich gelöscht.");

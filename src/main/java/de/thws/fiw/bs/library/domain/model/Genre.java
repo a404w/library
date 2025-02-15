@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Genre {
-    private Long id; // Die ID wird von der Datenbank generiert
+    private Long id;
     private String genrename;
     private String beschreibung;
     private Set<Book> books = new HashSet<>();;
@@ -17,7 +17,7 @@ public class Genre {
         this.beschreibung = beschreibung;
     }
 
-    // Getter und Setter
+    
     public Long getId() {
         return id;
     }

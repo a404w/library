@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
 
     private UserService userService;
-    private List<User> users; // Direkte Speicherung ohne Repository-Klasse
+    private List<User> users;
 
     @BeforeEach
     void setUp() {
@@ -21,7 +21,7 @@ class UserServiceTest {
         userService = new UserService(new UserRepository() {
             @Override
             public User save(User user) {
-                user.setId((long) (users.size() + 1)); // Simulierte Datenbank-ID
+                user.setId((long) (users.size() + 1));
                 users.add(user);
                 return user;
             }
@@ -63,7 +63,7 @@ class UserServiceTest {
     @Test
     void addUser_ShouldSaveUser() {
         User user = userService.addUser("Alice", "alice@example.com");
-        assertNotNull(user.getId()); // Die ID sollte gesetzt sein
+        assertNotNull(user.getId());
         assertEquals("Alice", user.getName());
     }
 

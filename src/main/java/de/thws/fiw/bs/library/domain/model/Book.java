@@ -3,7 +3,7 @@ package de.thws.fiw.bs.library.domain.model;
 import java.util.Set;
 
 public class Book {
-    private Long id; // Die ID wird von der Datenbank generiert
+    private Long id;
     private String title;
     private String isbn;
     private Set<Genre> genres;
@@ -21,7 +21,7 @@ public class Book {
         this.isAvailable = isAvailable;
     }
 
-    // Getter und Setter
+
     public Long getId() {
         return id;
     }

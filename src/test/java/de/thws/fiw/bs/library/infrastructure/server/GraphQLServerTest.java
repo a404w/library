@@ -20,19 +20,17 @@ public class GraphQLServerTest {
 
     @BeforeAll
     void setUp() throws Exception {
-        // Initialisiere Jetty-Server
+
         server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
 
-        // GraphQL-Servlet registrieren
         ServletHolder servletHolder = new ServletHolder(new GraphQLServlet());
         context.addServlet(servletHolder, "/graphql");
 
         server.setHandler(context);
         server.start();
 
-        // Initialisiere HttpClient für Tests
         httpClient = HttpClient.newHttpClient();
     }
 
@@ -53,7 +51,6 @@ public class GraphQLServerTest {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        // GraphQL erlaubt normalerweise nur POST-Anfragen, GET sollte 400 oder 405 zurückgeben
         assertEquals(400, response.statusCode());
     }
 

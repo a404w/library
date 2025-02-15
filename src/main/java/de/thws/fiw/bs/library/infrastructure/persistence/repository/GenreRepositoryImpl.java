@@ -26,7 +26,7 @@ public class GenreRepositoryImpl implements GenreRepository {
             stmt.setString(2, genre.getBeschreibung());
             stmt.executeUpdate();
 
-            // ID aus der Datenbank abrufen
+            
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 genre.setId(generatedKeys.getLong(1));
@@ -76,7 +76,7 @@ public class GenreRepositoryImpl implements GenreRepository {
                 Genre genre = new Genre(genrename, beschreibung);
                 genre.setId(genreId);
     
-                // 📌 Bücher nachladen:
+                
                 Set<Book> books = getBooksForGenre(genreId);
                 genre.setBooks(books);
     
@@ -104,7 +104,7 @@ public class GenreRepositoryImpl implements GenreRepository {
                 Genre genre = new Genre(genrename, beschreibung);
                 genre.setId(genreId);
     
-                // 📌 Bücher nachladen:
+                
                 Set<Book> books = getBooksForGenre(genreId);
                 genre.setBooks(books);
     
@@ -131,7 +131,7 @@ public class GenreRepositoryImpl implements GenreRepository {
                 Genre genre = new Genre(genrename, beschreibung);
                 genre.setId(genreId);
     
-                // 📌 Bücher nachladen
+                
                 Set<Book> books = getBooksForGenre(genreId);
                 genre.setBooks(books);
     
@@ -161,7 +161,7 @@ public class GenreRepositoryImpl implements GenreRepository {
                 String isbn = rs2.getString("isbn");
                 boolean isAvailable = rs2.getBoolean("is_available");
 
-                // Jetzt ein Book-Objekt bauen
+
                 Book book = new Book();
                 book.setId(bookId);
                 book.setTitle(title);

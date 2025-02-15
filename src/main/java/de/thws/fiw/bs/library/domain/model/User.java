@@ -3,7 +3,7 @@ package de.thws.fiw.bs.library.domain.model;
 import java.util.Set;
 
 public class User {
-    private Long id; // Die ID wird von der Datenbank generiert
+    private Long id; 
     private String name;
     private String email;
     private Set<Book> borrowedBooks;
@@ -23,7 +23,7 @@ public class User {
         this.borrowedBooks = borrowedBooks;
     }
 
-    // Getter und Setter
+
     public Long getId() {
         return id;
     }

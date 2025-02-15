@@ -29,7 +29,7 @@ public class DatabaseInitializer {
                     "name VARCHAR(255) NOT NULL, " +
                     "email VARCHAR(255) UNIQUE NOT NULL); " +
 
-                    // **Verknüpfungstabelle für `books` und `authors` (Many-to-Many)**
+                    
                     "CREATE TABLE IF NOT EXISTS book_author (" +
                     "book_id BIGINT, " +
                     "author_id BIGINT, " +
@@ -37,7 +37,7 @@ public class DatabaseInitializer {
                     "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE, " +
                     "FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE); " +
 
-                    // **Verknüpfungstabelle für `books` und `genres` (Many-to-Many)**
+                    
                     "CREATE TABLE IF NOT EXISTS book_genre (" +
                     "book_id BIGINT, " +
                     "genre_id BIGINT, " +
@@ -45,7 +45,7 @@ public class DatabaseInitializer {
                     "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE, " +
                     "FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE CASCADE); " +
 
-                    // Verknüpfungstabelle für ausgeliehene Bücher (User ↔ Books)
+                    
                     "CREATE TABLE IF NOT EXISTS loans (" +
                     "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
                     "user_id BIGINT NOT NULL, " +
@@ -56,7 +56,7 @@ public class DatabaseInitializer {
                     "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE); "+
 
 
-                    // **Verknüpfungstabelle für Reservierungen (User ↔ Books)**
+                    
                     "CREATE TABLE IF NOT EXISTS reservations (" +
                     "user_id BIGINT, " +
                     "book_id BIGINT, " +

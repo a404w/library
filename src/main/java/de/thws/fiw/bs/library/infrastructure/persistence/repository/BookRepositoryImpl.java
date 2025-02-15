@@ -25,13 +25,13 @@ public class BookRepositoryImpl implements BookRepository {
             stmt.setBoolean(3, book.isAvailable());
             stmt.executeUpdate();
 
-            // Falls die ID automatisch generiert wird
+            
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 book.setId(generatedKeys.getLong(1));
             }
 
-            // Autoren und Genres mit dem Buch verknüpfen
+            
             saveAuthors(book);
             saveGenres(book);
             return book;
@@ -123,7 +123,7 @@ public class BookRepositoryImpl implements BookRepository {
         String isbn = rs.getString("isbn");
         boolean isAvailable = rs.getBoolean("is_available");
 
-        // Autoren und Genres für das Buch abrufen
+
         Set<Author> authors = getAuthorsForBook(bookId);
         Set<Genre> genres = getGenresForBook(bookId);
         Book b = new Book(title, isbn, genres, authors, isAvailable);
@@ -140,11 +140,11 @@ public class BookRepositoryImpl implements BookRepository {
             stmt.setLong(1, bookId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Long authorId = rs.getLong("id");  // ID auslesen
+                Long authorId = rs.getLong("id");  
                 String authorName = rs.getString("name");
     
                 Author author = new Author(authorName);
-                author.setId(authorId);  // ID setzen!
+                author.setId(authorId);  
     
                 authors.add(author);
             }
@@ -161,12 +161,12 @@ public class BookRepositoryImpl implements BookRepository {
             stmt.setLong(1, bookId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Long genreId = rs.getLong("id");  // ID auslesen
+                Long genreId = rs.getLong("id");  
                 String genreName = rs.getString("genrename");
                 String genreDesc = rs.getString("beschreibung");
     
                 Genre genre = new Genre(genreName, genreDesc);
-                genre.setId(genreId);  // ID setzen!
+                genre.setId(genreId);  
     
                 genres.add(genre);
             }
@@ -200,7 +200,7 @@ public class BookRepositoryImpl implements BookRepository {
             stmt.setLong(4, book.getId());
             stmt.executeUpdate();
 
-            // Alte Autoren & Genres löschen und neue speichern
+        
             deleteBookAuthors(book.getId());
             deleteBookGenres(book.getId());
             saveAuthors(book);

@@ -20,7 +20,7 @@ public class Author {
         this.name = name;
     }
 
-    // Getter und Setter
+    
     public Long getId() {
         return id;
     }

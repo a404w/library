@@ -19,7 +19,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User save(User user) {
         String sql = "INSERT INTO users (name, email) VALUES (?, ?)";
         try {
-            connection.setAutoCommit(false); // Transaktion starten
+            connection.setAutoCommit(false);
 
             try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 stmt.setString(1, user.getName());
@@ -31,11 +31,11 @@ public class UserRepositoryImpl implements UserRepository {
                     user.setId(generatedKeys.getLong(1));
                 }
 
-                saveBorrowedBooks(user); // Bücher speichern
-                connection.commit(); // Transaktion abschließen
+                saveBorrowedBooks(user);
+                connection.commit();
                 return user;
             } catch (SQLException e) {
-                connection.rollback(); // Falls ein Fehler auftritt, alles zurücksetzen
+                connection.rollback();
                 throw e;
             }
         } catch (SQLException e) {
