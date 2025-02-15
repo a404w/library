@@ -18,21 +18,27 @@ public class LoanRepositoryImpl implements LoanRepository {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
 
-    
-public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepository) {
-    this.connection = DatabaseConnection.getConnection();
-    this.bookRepository = bookRepository;
-    this.userRepository = userRepository;
-}
+    public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepository) {
+        this.connection = DatabaseConnection.getConnection();
+        this.bookRepository = bookRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public Loan save(Loan loan) {
-        String sql = "INSERT INTO loans (book_id, user_id, loan_date, return_date) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO loans (book_id, user_id, from_date, to_date) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, loan.getBook().getId());
             stmt.setLong(2, loan.getUser().getId());
-            stmt.setDate(3, Date.valueOf(loan.getFrom()));
-            stmt.setDate(4, Date.valueOf(loan.getTo()));
+            stmt.setTimestamp(3, Timestamp.valueOf(loan.getFrom().atStartOfDay())); // from_date als Timestamp speichern
+            
+            // NULL-Werte für `to_date` behandeln
+            if (loan.getTo() != null) {
+                stmt.setTimestamp(4, Timestamp.valueOf(loan.getTo().atStartOfDay()));
+            } else {
+                stmt.setNull(4, Types.TIMESTAMP);
+            }
+
             stmt.executeUpdate();
 
             // Automatisch generierte ID abrufen
@@ -49,9 +55,13 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
 
     @Override
     public void update(Loan loan) {
-        String sql = "UPDATE loans SET return_date = ? WHERE id = ?";
+        String sql = "UPDATE loans SET to_date = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setDate(1, Date.valueOf(loan.getTo())); // Rückgabedatum aktualisieren
+            if (loan.getTo() != null) {
+                stmt.setTimestamp(1, Timestamp.valueOf(loan.getTo().atStartOfDay()));
+            } else {
+                stmt.setNull(1, Types.TIMESTAMP);
+            }
             stmt.setLong(2, loan.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -133,21 +143,27 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
     }
 
     private Loan mapResultSetToLoan(ResultSet rs) throws SQLException {
+        Long loanId = rs.getLong("id");
         Long bookId = rs.getLong("book_id");
         Long userId = rs.getLong("user_id");
-        LocalDate loanDate = rs.getDate("loan_date").toLocalDate();
-        LocalDate returnDate = rs.getDate("return_date").toLocalDate();
-    
-        // Nutze BookRepository & UserRepository, um echte Objekte zu laden
+
+        LocalDate fromDate = rs.getTimestamp("from_date").toLocalDateTime().toLocalDate();
+
+        // `to_date` kann NULL sein, also prüfen
+        Timestamp toTimestamp = rs.getTimestamp("to_date");
+        LocalDate toDate = (toTimestamp != null) ? toTimestamp.toLocalDateTime().toLocalDate() : null;
+
+        // Buch und Nutzer laden
         Book book = bookRepository.findById(bookId);
         User user = userRepository.findById(userId);
-    
+
         if (book == null || user == null) {
             throw new RuntimeException("Buch oder Nutzer nicht gefunden! (bookId: " + bookId + ", userId: " + userId + ")");
         }
-        Loan l = new Loan(book, user, loanDate, returnDate);
-        l.setId(userId);
-        return l;
+
+        Loan loan = new Loan(book, user, fromDate, toDate);
+        loan.setId(loanId);
+
+        return loan;
     }
-    
 }

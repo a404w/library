@@ -17,11 +17,11 @@ public class GraphQLServer {
 
             server.setHandler(context);
 
-            System.out.println("✅ GraphQL Server läuft auf Port 8080...");
+            System.out.println("GraphQL Server läuft auf Port 8080...");
             server.start();
             server.join();
         } catch (Exception e) {
-            System.err.println("❌ Fehler beim Starten des GraphQL-Servers:");
+            System.err.println("Fehler beim Starten des GraphQL-Servers:");
             e.printStackTrace();
         }
     }

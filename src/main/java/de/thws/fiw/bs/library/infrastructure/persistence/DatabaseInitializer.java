@@ -47,11 +47,11 @@ public class DatabaseInitializer {
 
                     // Verknüpfungstabelle für ausgeliehene Bücher (User ↔ Books)
                     "CREATE TABLE IF NOT EXISTS loans (" +
-                    "user_id BIGINT, " +
-                    "book_id BIGINT, " +
+                    "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
+                    "user_id BIGINT NOT NULL, " +
+                    "book_id BIGINT NOT NULL, " +
                     "from_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                     "to_date TIMESTAMP, " +
-                    "PRIMARY KEY (user_id, book_id), " +
                     "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
                     "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE); "+
 
