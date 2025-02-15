@@ -145,8 +145,9 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
         if (book == null || user == null) {
             throw new RuntimeException("Buch oder Nutzer nicht gefunden! (bookId: " + bookId + ", userId: " + userId + ")");
         }
-    
-        return new Loan(book, user, loanDate, returnDate);
+        Loan l = new Loan(book, user, loanDate, returnDate);
+        l.setId(userId);
+        return l;
     }
     
 }
