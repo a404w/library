@@ -58,7 +58,22 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     public User getUserById(Long id) {
-        return userService.getUserById(id);
+        System.out.println("🔎 GraphQL Resolver: getUserById aufgerufen mit ID: " + id);
+
+        User user = userService.getUserById(id);
+
+        if (user == null) {
+            System.out.println("❌ GraphQL Resolver: Kein Benutzer mit ID " + id + " gefunden.");
+            return null;
+        } else {
+            System.out.println("✅ GraphQL Resolver: Benutzer zurückgegeben: ID=" + user.getId() + ", Name="
+                    + user.getName() + ", Email=" + user.getEmail());
+        }
+
+        // ❗ TEST: Setze borrowedBooks auf null, um Serialisierungsprobleme zu testen
+        user.setBorrowedBooks(null);
+
+        return user;
     }
 
     public User getUserByName(String name) {
@@ -218,4 +233,6 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         genreService.updateGenre(genre);
         return true;
     }
+
+    
 }

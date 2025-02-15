@@ -106,26 +106,32 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User findById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
+        System.out.println("🔍 SQL-Query ausführen: " + sql + " mit ID = " + id);
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 Long userId = rs.getLong("id");
                 String name = rs.getString("name");
                 String email = rs.getString("email");
 
-                System.out.println("Benutzer gefunden: " + userId + ", " + name);
+                System.out.println("✅ Benutzer gefunden: ID = " + userId + ", Name = " + name);
 
-                User user = new User(name, email, getBorrowedBooks(userId));
+                User user = new User(name, email);
                 user.setId(userId);
 
                 return user;
             } else {
-                System.out.println("Kein Benutzer mit ID " + id + " gefunden.");
+                System.out.println("⚠️ Kein Benutzer mit ID " + id + " gefunden.");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Abrufen des Benutzers mit ID " + id, e);
+            System.err.println("❌ SQL-Fehler in findById: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("❌ Unerwarteter Fehler in findById: " + e.getMessage());
         }
+
         return null;
     }
 
