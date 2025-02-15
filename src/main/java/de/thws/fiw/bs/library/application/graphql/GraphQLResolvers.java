@@ -14,7 +14,7 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     private final ReservationService reservationService;
     // private final ReturnService returnService;
     private final UserService userService;
-    private final AuthorService authorService; // 🔥 Fix: authorService hinzugefügt
+    private final AuthorService authorService;
     private final GenreService genreService;
 
     public GraphQLResolvers(
@@ -25,61 +25,60 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
             GenreService genreService,
             /* ReturnService returnService, */
             UserService userService,
-            AuthorService authorService) { // 🔥 Fix: Konstruktor angepasst
+            AuthorService authorService) {
         this.bookService = bookService;
         // this.borrowService = borrowService;
         this.loanService = loanService;
         this.reservationService = reservationService;
         // this.returnService = returnService;
         this.userService = userService;
-        this.authorService = authorService; // 🔥 Fix: Initialisierung hinzugefügt
+        this.authorService = authorService;
         this.genreService = genreService;
     }
 
-    // ===========================
+
     // BOOK QUERIES
-    // ===========================
 
     public Book getBookById(Long id) {
-        return bookService.getBookById(id); // Buch nach ID abrufen
+        return bookService.getBookById(id); 
     }
 
     public List<Book> getBooks() {
-        return bookService.getAllBooks(); // Alle Bücher abrufen
+        return bookService.getAllBooks(); 
     }
 
     public List<Book> getBooksByGenreId(Long id) {
-        return bookService.getBooksByGenreId(id); // Bücher nach Genre abrufen
+        return bookService.getBooksByGenreId(id); 
     }
 
     public List<Book> getBooksByAuthorId(Long id) {
-        return bookService.getBooksByAuthorId(id); // Bücher nach Autor abrufen
+        return bookService.getBooksByAuthorId(id); 
     }
 
-    // ===========================
+    
     // USER QUERIES
-    // ===========================
+    
     public List<User> getUsers() {
-        return userService.getAllUsers(); // Alle Nutzer abrufen
+        return userService.getAllUsers(); 
     }
 
     public User getUserById(Long id) {
-        return userService.getUserById(id); // Nutzer nach ID abrufen
+        return userService.getUserById(id); 
     }
 
     public User getUserByName(String name) {
         return userService.getUserByName(name);
     }
 
-    // ===========================
+
     // LOAN QUERIES
-    // ===========================
+    
     public List<Loan> getLoansByUser(Long userId) {
-        return loanService.getLoansByUser(userId); // Ausleihen eines Nutzers abrufen
+        return loanService.getLoansByUser(userId); 
     }
 
     public List<Loan> getLoansByBook(Long bookId) {
-        return loanService.getLoansByBook(bookId); // Ausleihen eines Buches abrufen
+        return loanService.getLoansByBook(bookId); 
     }
 
     public List<Loan> getLoans() {
@@ -90,9 +89,9 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return loanService.getLoanById(id);
     }
 
-    // ===========================
+    
     // AUTHOR QUERIES
-    // ===========================
+   
 
     public List<Author> getAllAuthors() {
         return authorService.getAllAuthors(); // Alle Autoren abrufen
@@ -106,9 +105,9 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return authorService.getAuthorsByName(name); // Autoren nach Name suchen
     }
 
-    // ===========================
+    
     // GENRE QUERIES
-    // ===========================
+    
 
     public List<Genre> getAllGenres() {
         return genreService.getAllGenres();
@@ -134,9 +133,9 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return true;
     }
     
-    // ===========================
+    
     // Reservation QUERIES
-    // ===========================
+    
 
     public List<Reservation> getAllReservations() {
         return reservationService.getAllReservations();
@@ -154,22 +153,22 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return reservationService.getReservationsByBook(id);
     }
 
-    // ===========================
+    
     // BOOK MUTATIONS
-    // ===========================
+    
 
     public Book addBook(Book book) {
-        return bookService.addBook(book); // Buch speichern
+        return bookService.addBook(book); 
     }
 
     public boolean deleteBook(Long id) {
-        bookService.deleteBook(id); // Buch löschen
-        return true; // Rückgabe für GraphQL-Anfrage
+        bookService.deleteBook(id); 
+        return true; 
     }
 
     public boolean updateBook(Book book) {
-        bookService.updateBook(book); // Buch aktualisieren
-        return true; // Rückgabe für GraphQL
+        bookService.updateBook(book); 
+        return true; 
     }
 
     // public void borrowBook(Long bookId, Long userId) {
@@ -180,72 +179,71 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     // returnService.returnBook(bookId, userId); // Buch zurückgeben
     // }
 
-    // ===========================
+    
     // LOAN MUTATIONS
-    // ===========================
-    public Loan addLoan(Book book, User user) {
-        return loanService.addLoan(book, user); // Buch speichern
+    
+    public Loan addLoan(Book book, User user) throws Exception {
+        return loanService.addLoan(book, user);
     }
 
-    public boolean deleteLoan(Long id) {
-        loanService.deleteLoan(id); // Buch löschen
-        return true; // Rückgabe für GraphQL-Anfrage
+    public boolean deleteLoan(Long id) throws Exception {
+        loanService.deleteLoan(id); 
+        return true; 
     }
 
     public boolean updateLoan(Loan loan) {
-        loanService.updateLoan(loan); // Buch aktualisieren
-        return true; // Rückgabe für GraphQL
+        loanService.updateLoan(loan); 
+        return true; 
     }
 
-    // ===========================
+    
     // RESERVATION MUTATIONS
-    // ===========================
-    public Reservation addReservation(Book book, User user) {
+    
+    public Reservation addReservation(Book book, User user) throws Exception {
         return reservationService.reserveBook(book, user);
     }
 
-    public boolean deleteReservation(Long id) {
+    public boolean deleteReservation(Long id) throws Exception {
         reservationService.cancelReservation(id);
         return true;
     }
 
     public boolean updateReservation(Reservation reservation) {
-        reservationService.updateReservation(reservation); // Buch aktualisieren
-        return true; // Rückgabe für GraphQL
+        reservationService.updateReservation(reservation); 
+        return true; 
     }
 
-    // ===========================
+    
     // USER MUTATIONS
-    // ===========================
+    
     public User addUser(String name, String email) {
         return userService.addUser(name, email);
     }
 
     public boolean deleteUser(Long id) {
-        userService.deleteUser(id); // Buch löschen
-        return true; // Rückgabe für GraphQL-Anfrage
+        userService.deleteUser(id); 
+        return true; 
     }
 
     public boolean updateUser(User user) {
-        userService.updateUser(user); // Buch aktualisieren
-        return true; // Rückgabe für GraphQL
+        userService.updateUser(user); 
+        return true; 
     }
 
-    // ===========================
+    
     // AUTHOR MUTATIONS
-    // ===========================
 
     public Author addAuthor(String name) {
-        return authorService.addAuthor(name); // Autor hinzufügen
+        return authorService.addAuthor(name); 
     }
 
     public boolean deleteAuthor(Long id) {
-        authorService.deleteAuthor(id); // Autor löschen
-        return true; // Rückgabe für GraphQL
+        authorService.deleteAuthor(id); 
+        return true; 
     }
 
     public boolean updateAuthor(Author author) {
         authorService.updateAuthor(author);
-        return true; // Rückgabe für GraphQL
+        return true; 
     }
 }

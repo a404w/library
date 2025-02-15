@@ -18,7 +18,7 @@ public class UserService {
     }
 
     public User addUser(String name, String email) {
-        return userRepository.save(new User(name, email)); // Nutzer speichern
+        return userRepository.save(new User(name, email)); 
     }
 
     public void updateUser(User user) {
@@ -26,15 +26,15 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id); // Finde Nutzer nach ID
+        return userRepository.findById(id); 
     }
 
     public List<User> getAllUsers() {
-        return userRepository.findAll(); // Alle Nutzer abrufen
+        return userRepository.findAll(); 
     }
 
     public void deleteUser(Long id) {
-        userRepository.delete(id); // Nutzer löschen
+        userRepository.delete(id); 
     }
 
     public User getUserByName(String name) {

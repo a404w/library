@@ -32,6 +32,6 @@ public class AuthorService {
     }
 
     public void updateAuthor(Author author) {
-        authorRepository.update(author); // Buch aktualisieren
+        authorRepository.update(author); 
     }
 }

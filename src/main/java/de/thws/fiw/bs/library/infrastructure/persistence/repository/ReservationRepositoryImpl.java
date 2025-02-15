@@ -35,7 +35,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
             return reservation;
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Speichern der Reservierung", e);
+            throw new RuntimeException("Fehler beim Speichern der Reservierung", e);
         }
     }
 
@@ -49,7 +49,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             stmt.setLong(4, reservation.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Aktualisieren der Reservierung", e);
+            throw new RuntimeException("Fehler beim Aktualisieren der Reservierung", e);
         }
     }
 
@@ -60,7 +60,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Löschen der Reservierung", e);
+            throw new RuntimeException("Fehler beim Löschen der Reservierung", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 return mapResultSetToReservation(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen der Reservierung", e);
+            throw new RuntimeException("Fehler beim Abrufen der Reservierung", e);
         }
         return null;
     }
@@ -90,7 +90,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 reservations.add(mapResultSetToReservation(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen der Reservierungen eines Nutzers", e);
+            throw new RuntimeException("Fehler beim Abrufen der Reservierungen eines Nutzers", e);
         }
         return reservations;
     }
@@ -106,7 +106,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 reservations.add(mapResultSetToReservation(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen der Reservierungen eines Buches", e);
+            throw new RuntimeException("Fehler beim Abrufen der Reservierungen eines Buches", e);
         }
         return reservations;
     }
@@ -121,7 +121,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 reservations.add(mapResultSetToReservation(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen aller Reservierungen", e);
+            throw new RuntimeException("Fehler beim Abrufen aller Reservierungen", e);
         }
         return reservations;
     }
@@ -141,7 +141,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     
         // Falls Nutzer oder Buch nicht existieren, Fehler werfen
         if (user == null || book == null) {
-            throw new RuntimeException("❌ Fehler: Buch oder Nutzer existiert nicht!");
+            throw new RuntimeException("Fehler: Buch oder Nutzer existiert nicht!");
         }
     
         Reservation reservation = new Reservation(user, book, reservationDate);

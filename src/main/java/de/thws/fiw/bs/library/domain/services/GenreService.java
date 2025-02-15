@@ -13,19 +13,19 @@ public class GenreService {
     }
 
     public Genre addGenre(String genrename, String beschreibung) {
-        return genreRepository.save(new Genre(genrename, beschreibung)); // Genre speichern
+        return genreRepository.save(new Genre(genrename, beschreibung)); 
     }
 
     public void updateGenre(Genre genre) {
-        genreRepository.update(genre); // Buch aktualisieren
+        genreRepository.update(genre); 
     }
 
     public Genre getGenresByName(String name) {
-        return genreRepository.findByName(name); // Genres nach Name suchen
+        return genreRepository.findByName(name); 
     }
 
     public List<Genre> getAllGenres() {
-        return genreRepository.findAll(); // Alle Genres abrufen
+        return genreRepository.findAll(); 
     }
 
     public Genre getGenreById(Long id) {

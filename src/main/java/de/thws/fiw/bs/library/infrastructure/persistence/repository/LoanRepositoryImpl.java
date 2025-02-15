@@ -43,7 +43,7 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
 
             return loan;
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Speichern der Ausleihe", e);
+            throw new RuntimeException("Fehler beim Speichern der Ausleihe", e);
         }
     }
 
@@ -55,7 +55,7 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
             stmt.setLong(2, loan.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Aktualisieren der Ausleihe", e);
+            throw new RuntimeException("Fehler beim Aktualisieren der Ausleihe", e);
         }
     }
 
@@ -66,7 +66,7 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Löschen der Ausleihe", e);
+            throw new RuntimeException("Fehler beim Löschen der Ausleihe", e);
         }
     }
 
@@ -80,7 +80,7 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
                 return mapResultSetToLoan(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen der Ausleihe", e);
+            throw new RuntimeException("Fehler beim Abrufen der Ausleihe", e);
         }
         return null;
     }
@@ -96,7 +96,7 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
                 loans.add(mapResultSetToLoan(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen der Ausleihen eines Nutzers", e);
+            throw new RuntimeException("Fehler beim Abrufen der Ausleihen eines Nutzers", e);
         }
         return loans;
     }
@@ -112,7 +112,7 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
                 loans.add(mapResultSetToLoan(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen der Ausleihen eines Buches", e);
+            throw new RuntimeException("Fehler beim Abrufen der Ausleihen eines Buches", e);
         }
         return loans;
     }
@@ -127,7 +127,7 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
                 loans.add(mapResultSetToLoan(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen aller Ausleihen", e);
+            throw new RuntimeException("Fehler beim Abrufen aller Ausleihen", e);
         }
         return loans;
     }
@@ -143,7 +143,7 @@ public LoanRepositoryImpl(BookRepository bookRepository, UserRepository userRepo
         User user = userRepository.findById(userId);
     
         if (book == null || user == null) {
-            throw new RuntimeException("⚠️ Buch oder Nutzer nicht gefunden! (bookId: " + bookId + ", userId: " + userId + ")");
+            throw new RuntimeException("Buch oder Nutzer nicht gefunden! (bookId: " + bookId + ", userId: " + userId + ")");
         }
     
         return new Loan(book, user, loanDate, returnDate);

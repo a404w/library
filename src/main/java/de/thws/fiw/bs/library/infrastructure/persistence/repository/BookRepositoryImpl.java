@@ -36,7 +36,7 @@ public class BookRepositoryImpl implements BookRepository {
             saveGenres(book);
             return book;
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Speichern des Buches", e);
+            throw new RuntimeException("Fehler beim Speichern des Buches", e);
         }
     }
 
@@ -76,7 +76,7 @@ public class BookRepositoryImpl implements BookRepository {
                 return mapResultSetToBook(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen des Buches", e);
+            throw new RuntimeException("Fehler beim Abrufen des Buches", e);
         }
         return null;
     }
@@ -94,7 +94,7 @@ public class BookRepositoryImpl implements BookRepository {
                 books.add(mapResultSetToBook(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen der Bücher nach Autor", e);
+            throw new RuntimeException("Fehler beim Abrufen der Bücher nach Autor", e);
         }
         return books;
     }
@@ -112,7 +112,7 @@ public class BookRepositoryImpl implements BookRepository {
                 books.add(mapResultSetToBook(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen der Bücher nach Genre", e);
+            throw new RuntimeException("Fehler beim Abrufen der Bücher nach Genre", e);
         }
         return books;
     }
@@ -170,7 +170,7 @@ public class BookRepositoryImpl implements BookRepository {
                 books.add(mapResultSetToBook(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Abrufen aller Bücher", e);
+            throw new RuntimeException("Fehler beim Abrufen aller Bücher", e);
         }
         return books;
     }
@@ -191,7 +191,7 @@ public class BookRepositoryImpl implements BookRepository {
             saveAuthors(book);
             saveGenres(book);
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Aktualisieren des Buches", e);
+            throw new RuntimeException("Fehler beim Aktualisieren des Buches", e);
         }
     }
 
@@ -221,7 +221,7 @@ public class BookRepositoryImpl implements BookRepository {
                 stmt.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("❌ Fehler beim Löschen des Buches", e);
+            throw new RuntimeException("Fehler beim Löschen des Buches", e);
         }
     }
 }

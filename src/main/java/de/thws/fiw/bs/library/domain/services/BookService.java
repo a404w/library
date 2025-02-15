@@ -18,30 +18,30 @@ public class BookService {
     }
 
     public Book addBook(Book book) {
-        return bookRepository.save(book); // Buch speichern
+        return bookRepository.save(book);
     }
 
     public Book getBookById(Long id) {
-        return bookRepository.findById(id); // Finde Buch nach ID
+        return bookRepository.findById(id); 
     }
 
     public List<Book> getAllBooks() {
-        return bookRepository.findAll(); // Alle Bücher abrufen
+        return bookRepository.findAll(); 
     }
 
     public List<Book> getBooksByGenreId(Long id) {
-        return bookRepository.findByGenreId(id); // Bücher nach GenreId suchen
+        return bookRepository.findByGenreId(id); 
     }
 
     public List<Book> getBooksByAuthorId(Long id) {
-        return bookRepository.findByAuthorId(id); // Bücher nach Autor suchen
+        return bookRepository.findByAuthorId(id);
     }
 
     public void deleteBook(Long id) {
-        bookRepository.delete(id); // Buch löschen
+        bookRepository.delete(id); 
     }
 
     public void updateBook(Book book) {
-        bookRepository.update(book); // Buch aktualisieren
+        bookRepository.update(book); 
     }
 }
