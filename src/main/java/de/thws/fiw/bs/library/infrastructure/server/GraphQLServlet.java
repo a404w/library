@@ -7,12 +7,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import jakarta.servlet.annotation.WebServlet;
 import java.nio.charset.StandardCharsets;
 import de.thws.fiw.bs.library.application.graphql.GraphQLHandler;
 
 
-@WebServlet(urlPatterns = "/graphql")
 public class GraphQLServlet extends GraphQLHttpServlet {
 
     @Override
