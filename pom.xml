@@ -10,6 +10,13 @@
   <version>1.0-SNAPSHOT</version>
   <name>library</name>
   <url>http://maven.apache.org</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
+        <jetty.version>12.0.10</jetty.version>
+        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+    </properties>
 
   <dependencies>
     <!-- JUnit 5 (Jupiter) für Tests -->
@@ -25,11 +32,13 @@
         <artifactId>graphql-java-servlet</artifactId>
         <version>15.2.0</version>
     </dependency>
+
     <dependency>
         <groupId>jakarta.servlet</groupId>
         <artifactId>jakarta.servlet-api</artifactId>
-        <version>5.0.0</version>
+        <version>${jakarta.servlet-api.version}</version>
     </dependency>
+
     <!-- GraphQL Tools -->
     <dependency>
         <groupId>com.graphql-java-kickstart</groupId>
@@ -47,7 +56,12 @@
     <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
-        <version>9.4.44.v20210927</version>
+        <version>${jetty.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.jetty.ee10</groupId>
+        <artifactId>jetty-ee10-servlet</artifactId>
+        <version>${jetty.version}</version>
     </dependency>
     <!-- H2 Database Driver -->
     <dependency>
