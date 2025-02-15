@@ -1,133 +1,81 @@
-/*package de.thws.fiw.bs.library.infrastructure.server;
+package de.thws.fiw.bs.library.infrastructure.server;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.junit.jupiter.api.*;
 
-import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GraphQLServerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class GraphQLServerTest {
 
-    private static final String GRAPHQL_ENDPOINT = "http://localhost:8080/graphql";
-    private ExecutorService serverExecutor;
+    private Server server;
+    private HttpClient httpClient;
 
-    @BeforeEach
-    void setUp() throws InterruptedException {
-        // Starte den Server in einem separaten Thread
-        serverExecutor = Executors.newSingleThreadExecutor();
-        serverExecutor.submit(() -> {
-            try {
-                GraphQLServer.main(new String[]{});
-            } catch (IOException e) {
-                throw new RuntimeException("Fehler beim Starten des GraphQL-Servers", e);
-            }
-        });
-    
-        // Warte, bis der Server gestartet ist
-        Thread.sleep(2000);
+    @BeforeAll
+    void setUp() throws Exception {
+        // Initialisiere Jetty-Server
+        server = new Server(8080);
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+
+        // GraphQL-Servlet registrieren
+        ServletHolder servletHolder = new ServletHolder(new GraphQLServlet());
+        context.addServlet(servletHolder, "/graphql");
+
+        server.setHandler(context);
+        server.start();
+
+        // Initialisiere HttpClient für Tests
+        httpClient = HttpClient.newHttpClient();
     }
 
-    @AfterEach
-    void tearDown() {
-        if (serverExecutor != null) {
-            serverExecutor.shutdownNow(); // Server stoppen
+    @AfterAll
+    void tearDown() throws Exception {
+        if (server != null) {
+            server.stop();
         }
     }
 
-    private String sendGraphQLRequest(String query) throws IOException {
-        URL url = URI.create(GRAPHQL_ENDPOINT).toURL();
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setDoOutput(true);
+    @Test
+    @DisplayName("Testet, ob der GraphQL-Server erreichbar ist")
+    void testGraphQLServerRunning() throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/graphql"))
+                .GET()
+                .build();
 
-        try (OutputStream os = connection.getOutputStream()) {
-            byte[] input = query.getBytes("utf-8");
-            os.write(input, 0, input.length);
-        }
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        StringBuilder response = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
-            String responseLine;
-            while ((responseLine = br.readLine()) != null) {
-                response.append(responseLine.trim());
-            }
-        }
-
-        return response.toString();
+        // GraphQL erlaubt normalerweise nur POST-Anfragen, GET sollte 400 oder 405 zurückgeben
+        assertEquals(400, response.statusCode());
     }
 
     @Test
-    void testGetBooks() throws Exception {
-        String query = "{ \"query\": \"{ getBooks { id title isbn } }\" }";
-        String response = sendGraphQLRequest(query);
-        //System.out.println("GraphQL Response: " + response.toString());
+    @DisplayName("Testet eine einfache GraphQL-Query")
+    void testGraphQLQuery() throws Exception {
+        String query = "{ \"query\": \"{ getBooks { id title } }\" }";
 
-
-        assertTrue(response.contains("\"getBooks\""), "Response should contain 'getBooks'");
-    }
-
-    @Test
-    void testGetUsers() throws Exception {
-        String query = "{ \"query\": \"{ getUsers { id name email } }\" }";
-        String response = sendGraphQLRequest(query);
-        //System.out.println("GraphQL Response: " + response.toString());
-
-
-        assertTrue(response.contains("\"getUsers\""), "Response should contain 'getUsers'");
-    }
-
-    @Test
-    void testAddBookMutation() throws Exception {
-        String mutation = "{ \"query\": \"mutation { addBook(id: 1, title: \\\"Test Book\\\", isbn: \\\"12345\\\", genres: [\\\"Fiction\\\"], authors: [], isAvailable: true) { id title } }\" }";
-        String response = sendGraphQLRequest(mutation);
-        //System.out.println("GraphQL Response: " + response.toString());
-
-
-        assertTrue(response.contains("\"addBook\""), "Response should contain 'addBook'");
-        assertTrue(response.contains("\"title\": \"Test Book\""), "Book title should be 'Test Book'");
-    }
-    @Test
-    void testInvalidQuery() throws Exception {
-        String invalidQuery = "{ \"query\": \"{ unknownQuery { id } }\" }";
-        String response = sendGraphQLRequest(invalidQuery);
     
-        assertFalse(response.contains("\"unknownQuery\""), "Response should not contain 'unknownQuery'");
-        assertTrue(response.contains("\"data\": {}"), "Response should indicate an empty data object");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/graphql"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(query))
+                .build();
+    
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    
+        System.out.println("Response Code: " + response.statusCode());
+        System.out.println("Response Body: " + response.body());
+    
+        assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("\"getBooks\""));
     }
     
-    @Test
-    void testAddBookAndRetrieveIt() throws Exception {
-        // Erst ein Buch hinzufügen
-        String mutation = "{ \"query\": \"mutation { addBook(id: 2, title: \\\"New Book\\\", isbn: \\\"67890\\\", genres: [\\\"Sci-Fi\\\"], authors: [], isAvailable: true) { id title } }\" }";
-        String addResponse = sendGraphQLRequest(mutation);
-        System.out.println("GraphQL Response: " + addResponse.toString());
-        assertTrue(addResponse.contains("\"addBook\""), "Response should contain 'addBook'");
-        assertTrue(addResponse.contains("\"title\": \"New Book\""), "Book title should be 'New Book'");
-    
-        // Jetzt nach allen Büchern fragen und prüfen, ob das Buch enthalten ist
-        String query = "{ \"query\": \"{ getBooks { id title isbn } }\" }";
-        String getResponse = sendGraphQLRequest(query);
-    
-        assertTrue(getResponse.contains("\"title\": \"New Book\""), "Added book should be retrievable");
-    }
-    
-    @Test
-    void testUnsupportedMethod() throws Exception {
-        // Versuch, eine GET-Anfrage zu senden, sollte nicht erlaubt sein
-        URL url = URI.create(GRAPHQL_ENDPOINT).toURL();
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        
-        int responseCode = connection.getResponseCode();
-        assertEquals(405, responseCode, "Server should return 405 for unsupported GET method");
-    }
 }
- */
