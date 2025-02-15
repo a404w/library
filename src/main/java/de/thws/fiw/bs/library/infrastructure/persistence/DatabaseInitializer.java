@@ -45,14 +45,16 @@ public class DatabaseInitializer {
                     "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE, " +
                     "FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE CASCADE); " +
 
-                    // **Verknüpfungstabelle für ausgeliehene Bücher (User ↔ Books)**
-                    "CREATE TABLE IF NOT EXISTS borrowed_books (" +
+                    // Verknüpfungstabelle für ausgeliehene Bücher (User ↔ Books)
+                    "CREATE TABLE IF NOT EXISTS loans (" +
                     "user_id BIGINT, " +
                     "book_id BIGINT, " +
-                    "borrow_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                    "from_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                    "to_date TIMESTAMP, " +
                     "PRIMARY KEY (user_id, book_id), " +
                     "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
-                    "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE); " +
+                    "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE); "+
+
 
                     // **Verknüpfungstabelle für Reservierungen (User ↔ Books)**
                     "CREATE TABLE IF NOT EXISTS reservations (" +
