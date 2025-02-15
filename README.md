@@ -1,73 +1,62 @@
-# library
-Projekt für BackendSystems
+This README file provides information on setting up the Library Management System, starting the Docker container, and executing integration tests.
 
-# Struktur:
-src/main/java/de/thws/fiw/bs/library
-│
-├── domain                  
-│   ├── model             
-│   │   ├── Book.java            // Buchart mit Titel, Genre, ISBN, Autoren
-│   │   ├── BookCopy.java        // Einzelnes Exemplar eines Buches
-│   │   ├── Author.java          // Autorenmodell
-│   │   ├── User.java            // Nutzer mit Ausleihen und Reservierungen
-│   │   └── Reservation.java     // Modell für Reservierungen
-│   │
-│   ├── service              
-│   │   ├── BorrowService.java   // Logik für Ausleihen von Büchern
-│   │   ├── ReturnService.java   // Logik für Rückgaben
-│   │   ├── ReservationService.java // Logik für Reservierungen
-│   │   └── BookSearchService.java  // Logik für Suche und Filterung
-│   │
-│   └── ports                
-│       ├── BookRepository.java      // Schnittstelle für Bücher
-│       ├── BookCopyRepository.java  // Schnittstelle für Exemplare
-│       ├── AuthorRepository.java    // Schnittstelle für Autoren
-│       ├── UserRepository.java      // Schnittstelle für Nutzer
-│       └── ReservationRepository.java // Schnittstelle für Reservierungen
-│
-├── api                     
-│   ├── controller          
-│   │   ├── BookController.java       // REST-Endpoints für Bücher
-│   │   ├── AuthorController.java     // Endpoints für Autoren
-│   │   ├── UserController.java       // Endpoints für Nutzer
-│   │   └── ReservationController.java // Endpoints für Reservierungen
-│   │
-│   ├── dto                 
-│   │   ├── BookDTO.java           // Data Transfer Object für Bücher
-│   │   ├── BookCopyDTO.java       // DTO für Buch-Exemplare
-│   │   ├── AuthorDTO.java         // DTO für Autoren
-│   │   ├── UserDTO.java           // DTO für Nutzer
-│   │   └── ReservationDTO.java    // DTO für Reservierungen
-│   │
-│   └── exception            
-│       ├── BookNotFoundException.java
-│       ├── AuthorNotFoundException.java
-│       ├── ReservationNotFoundException.java
-│       └── UserNotFoundException.java
-│
-├── persistence             
-│   ├── repository          
-│   │   ├── JpaBookRepository.java
-│   │   ├── JpaBookCopyRepository.java
-│   │   ├── JpaAuthorRepository.java
-│   │   ├── JpaUserRepository.java
-│   │   └── JpaReservationRepository.java
-│   │
-│   ├── entity              
-│   │   ├── BookEntity.java
-│   │   ├── BookCopyEntity.java
-│   │   ├── AuthorEntity.java
-│   │   ├── UserEntity.java
-│   │   └── ReservationEntity.java
-│   │
-│   └── mapper              
-│       ├── BookMapper.java
-│       ├── BookCopyMapper.java
-│       ├── AuthorMapper.java
-│       ├── UserMapper.java
-│       └── ReservationMapper.java
-│
-├── config                  
-│   └── AppConfig.java
-│
-└── Application.java
+
+
+To run the Library Management System using Docker, follow these steps:
+
+1. Navigate to the Project Directory:
+   Open a terminal and navigate to the root directory of your library project.
+
+2. Build the Docker Image:
+   If this is your first time running the project, build the Docker image using the provided Dockerfile.
+
+   docker build -t library-system .
+
+
+3. Run the Docker Container:
+   Start the Docker container to launch the library management system.
+
+   docker run -d --name library-container -p 8080:8080 library-system
+
+
+   - The `-d` flag runs the container in detached mode.
+   - The `--name` flag assigns a name to the container.
+   - The `-p` flag maps port 8080 from the container to your local machine.
+
+4. Verify the Container is Running:
+   Verify that the container is up and running using:
+
+   docker ps
+
+
+   You should see `library-container` listed as one of the running containers.
+
+
+To execute integration tests for the Library Management System, follow these steps:
+
+1. Navigate to the Test Directory:
+   Open a terminal and navigate to the directory containing the test scripts.
+
+   cd /path/to/your/library-project/tests
+
+2. Run the Tests Using JUnit:
+   Use the JUnit framework to run your integration tests. Ensure your test classes are properly set up in your IDE (such as IntelliJ IDEA or Eclipse) or via the command line with Maven/Gradle.
+
+   For Maven:
+
+
+   mvn test
+
+
+  *For Gradle:*
+
+   ./gradlew test
+
+3. Review Test Results:
+   Once tests are executed, review the test results for any failures or errors that need addressing. Logs will be available in your console or through your build tool's reports.
+
+
+
+- Docker Issues: If the Docker container fails to start, check that Docker is running on your system and review any error messages in the terminal.
+
+- Test Failures: If integration tests fail, ensure the Docker container is running and check the test logs for specific error messages. Address any issues in your code or environment configuration.
