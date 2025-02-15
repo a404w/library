@@ -121,7 +121,7 @@ type Genre {
   id: ID!
   genrename: String!
   beschreibung: String!
-  books: [Book!]!
+  books: [Book]
 }
 
 # ----------------------------------------------------------------------------

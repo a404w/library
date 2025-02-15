@@ -1,12 +1,13 @@
 package de.thws.fiw.bs.library.domain.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Genre {
     private Long id; // Die ID wird von der Datenbank generiert
     private String genrename;
     private String beschreibung;
-    private Set<Book> books;
+    private Set<Book> books = new HashSet<>();;
 
     public Genre() {
     }
