@@ -2,21 +2,19 @@ package de.thws.fiw.bs.library.infrastructure.server;
 
 import graphql.kickstart.servlet.GraphQLHttpServlet;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
+
 
 public class GraphQLServer {
     public static void main(String[] args) {
         try {
             Server server = new Server(8080);
-            ServletContextHandler context = new ServletContextHandler();
+            ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
             context.setContextPath("/");
-
-            // Korrekte Registrierung des GraphQL-Servlets
-            ServletHolder servletHolder = new ServletHolder(GraphQLHttpServlet.class);
-            servletHolder.setInitParameter("graphql.schema.factory",
-                    "de.thws.fiw.bs.library.application.graphql.GraphQLHandler");
-
+            
+            // Servlet direkt über die Klasse registrieren
+            ServletHolder servletHolder = new ServletHolder(new GraphQLServlet());
             context.addServlet(servletHolder, "/graphql");
 
             server.setHandler(context);
