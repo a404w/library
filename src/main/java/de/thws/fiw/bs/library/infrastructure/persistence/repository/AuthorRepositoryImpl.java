@@ -64,7 +64,11 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new Author(rs.getString("name"));
+                Long authorId = rs.getLong("id");
+                String name = rs.getString("name");
+                Author author = new Author(name);
+                author.setId(authorId); // ID setzen
+                return author;
             }
         } catch (SQLException e) {
             throw new RuntimeException("Fehler beim Abrufen des Autors", e);
@@ -79,14 +83,23 @@ public class AuthorRepositoryImpl implements AuthorRepository {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                authors.add(new Author(rs.getString("name")));
+                // ID und Name auslesen
+                Long id = rs.getLong("id");
+                String name = rs.getString("name");
+    
+                // Domain-Objekt erzeugen und ID setzen
+                Author author = new Author(name);
+                author.setId(id);
+    
+                // In die Liste packen
+                authors.add(author);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Fehler beim Abrufen aller Autoren", e);
         }
         return authors;
     }
-
+    
     @Override
     public List<Author> getAuthorsByName(String name) {
         List<Author> authors = new ArrayList<>();
@@ -95,11 +108,20 @@ public class AuthorRepositoryImpl implements AuthorRepository {
             stmt.setString(1, "%" + name + "%");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                authors.add(new Author(rs.getString("name")));
+                // ID und Name auslesen
+                long authorId = rs.getLong("id");
+                String authorName = rs.getString("name");
+    
+                // Domain-Objekt erzeugen und ID setzen
+                Author author = new Author(authorName);
+                author.setId(authorId);
+    
+                // In die Liste packen
+                authors.add(author);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Fehler beim Suchen nach Autoren", e);
         }
         return authors;
-    }
+    }    
 }
