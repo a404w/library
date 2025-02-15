@@ -9,78 +9,63 @@ import java.util.List;
 public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationResolver {
 
     private final BookService bookService;
-    // private final BorrowService borrowService;
     private final LoanService loanService;
     private final ReservationService reservationService;
-    // private final ReturnService returnService;
     private final UserService userService;
     private final AuthorService authorService;
     private final GenreService genreService;
 
+    // Im Konstruktor alle Services entgegennehmen
     public GraphQLResolvers(
             BookService bookService,
-            /* BorrowService borrowService, */
             LoanService loanService,
             ReservationService reservationService,
             GenreService genreService,
-            /* ReturnService returnService, */
             UserService userService,
             AuthorService authorService) {
         this.bookService = bookService;
-        // this.borrowService = borrowService;
         this.loanService = loanService;
         this.reservationService = reservationService;
-        // this.returnService = returnService;
+        this.genreService = genreService;
         this.userService = userService;
         this.authorService = authorService;
-        this.genreService = genreService;
     }
 
+    // ----------------------------------------------------------------------------
+    // QUERIES
+    // ----------------------------------------------------------------------------
 
-    // BOOK QUERIES
+    // -- Bücher
+    public List<Book> getBooks() {
+        return bookService.getAllBooks();
+    }
 
     public Book getBookById(Long id) {
-        return bookService.getBookById(id); 
-    }
-
-    public List<Book> getBooks() {
-        return bookService.getAllBooks(); 
+        return bookService.getBookById(id);
     }
 
     public List<Book> getBooksByGenreId(Long id) {
-        return bookService.getBooksByGenreId(id); 
+        return bookService.getBooksByGenreId(id);
     }
 
     public List<Book> getBooksByAuthorId(Long id) {
-        return bookService.getBooksByAuthorId(id); 
+        return bookService.getBooksByAuthorId(id);
     }
 
-    
-    // USER QUERIES
-    
+    // -- Benutzer
     public List<User> getUsers() {
-        return userService.getAllUsers(); 
+        return userService.getAllUsers();
     }
 
     public User getUserById(Long id) {
-        return userService.getUserById(id); 
+        return userService.getUserById(id);
     }
 
     public User getUserByName(String name) {
         return userService.getUserByName(name);
     }
 
-
-    // LOAN QUERIES
-    
-    public List<Loan> getLoansByUser(Long userId) {
-        return loanService.getLoansByUser(userId); 
-    }
-
-    public List<Loan> getLoansByBook(Long bookId) {
-        return loanService.getLoansByBook(bookId); 
-    }
-
+    // -- Ausleihen/Loans
     public List<Loan> getLoans() {
         return loanService.getAllLoans();
     }
@@ -89,26 +74,28 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return loanService.getLoanById(id);
     }
 
-    
-    // AUTHOR QUERIES
-   
+    public List<Loan> getLoansByUser(Long userId) {
+        return loanService.getLoansByUser(userId);
+    }
 
+    public List<Loan> getLoansByBook(Long bookId) {
+        return loanService.getLoansByBook(bookId);
+    }
+
+    // -- Autoren
     public List<Author> getAllAuthors() {
-        return authorService.getAllAuthors(); // Alle Autoren abrufen
+        return authorService.getAllAuthors();
     }
 
     public Author getAuthorById(Long id) {
-        return authorService.getAuthorById(id); // Autor nach ID abrufen
+        return authorService.getAuthorById(id);
     }
 
     public List<Author> getAuthorsByName(String name) {
-        return authorService.getAuthorsByName(name); // Autoren nach Name suchen
+        return authorService.getAuthorsByName(name);
     }
 
-    
-    // GENRE QUERIES
-    
-
+    // -- Genres
     public List<Genre> getAllGenres() {
         return genreService.getAllGenres();
     }
@@ -120,23 +107,8 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     public Genre getGenresByName(String name) {
         return genreService.getGenresByName(name);
     }
-    public Genre addGenre(String genrename, String beschreibung) {
-        return genreService.addGenre(genrename, beschreibung);
-    }
-    public boolean deleteGenre(Long id) {
-        genreService.deleteGenre(id);
-        return true;
-    }
-    
-    public boolean updateGenre(Genre genre) {
-        genreService.updateGenre(genre);
-        return true;
-    }
-    
-    
-    // Reservation QUERIES
-    
 
+    // -- Reservationen
     public List<Reservation> getAllReservations() {
         return reservationService.getAllReservations();
     }
@@ -145,60 +117,49 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
         return reservationService.getReservationById(id);
     }
 
-    public List<Reservation> getReservationsByUser(Long id) {
-        return reservationService.getReservationsByUser(id);
+    public List<Reservation> getReservationsByUser(Long userId) {
+        return reservationService.getReservationsByUser(userId);
     }
 
-    public List<Reservation> getReservationByBook(Long id) {
-        return reservationService.getReservationsByBook(id);
+    public List<Reservation> getReservationByBook(Long bookId) {
+        return reservationService.getReservationsByBook(bookId);
     }
 
-    
-    // BOOK MUTATIONS
-    
+    // ----------------------------------------------------------------------------
+    // MUTATIONS
+    // ----------------------------------------------------------------------------
 
+    // -- Bücher
     public Book addBook(Book book) {
-        return bookService.addBook(book); 
+        return bookService.addBook(book);
     }
 
     public boolean deleteBook(Long id) {
-        bookService.deleteBook(id); 
-        return true; 
+        bookService.deleteBook(id);
+        return true;
     }
 
     public boolean updateBook(Book book) {
-        bookService.updateBook(book); 
-        return true; 
+        bookService.updateBook(book);
+        return true;
     }
 
-    // public void borrowBook(Long bookId, Long userId) {
-    // borrowService.borrowBook(bookId, userId); // Ausleihen
-    // }
-
-    // public void returnBook(Long bookId, Long userId) {
-    // returnService.returnBook(bookId, userId); // Buch zurückgeben
-    // }
-
-    
-    // LOAN MUTATIONS
-    
+    // -- Ausleihen
     public Loan addLoan(Book book, User user) throws Exception {
         return loanService.addLoan(book, user);
     }
 
     public boolean deleteLoan(Long id) throws Exception {
-        loanService.deleteLoan(id); 
-        return true; 
+        loanService.deleteLoan(id);
+        return true;
     }
 
     public boolean updateLoan(Loan loan) {
-        loanService.updateLoan(loan); 
-        return true; 
+        loanService.updateLoan(loan);
+        return true;
     }
 
-    
-    // RESERVATION MUTATIONS
-    
+    // -- Reservationen
     public Reservation addReservation(Book book, User user) throws Exception {
         return reservationService.reserveBook(book, user);
     }
@@ -209,41 +170,52 @@ public class GraphQLResolvers implements GraphQLQueryResolver, GraphQLMutationRe
     }
 
     public boolean updateReservation(Reservation reservation) {
-        reservationService.updateReservation(reservation); 
-        return true; 
+        reservationService.updateReservation(reservation);
+        return true;
     }
 
-    
-    // USER MUTATIONS
-    
+    // -- User
     public User addUser(String name, String email) {
         return userService.addUser(name, email);
     }
 
     public boolean deleteUser(Long id) {
-        userService.deleteUser(id); 
-        return true; 
+        userService.deleteUser(id);
+        return true;
     }
 
     public boolean updateUser(User user) {
-        userService.updateUser(user); 
-        return true; 
+        userService.updateUser(user);
+        return true;
     }
 
-    
-    // AUTHOR MUTATIONS
-
+    // -- Autor
     public Author addAuthor(String name) {
-        return authorService.addAuthor(name); 
+        return authorService.addAuthor(name);
     }
 
     public boolean deleteAuthor(Long id) {
-        authorService.deleteAuthor(id); 
-        return true; 
+        authorService.deleteAuthor(id);
+        return true;
     }
 
     public boolean updateAuthor(Author author) {
         authorService.updateAuthor(author);
-        return true; 
+        return true;
+    }
+
+    // -- Genre
+    public Genre addGenre(String genrename, String beschreibung) {
+        return genreService.addGenre(genrename, beschreibung);
+    }
+
+    public boolean deleteGenre(Long id) {
+        genreService.deleteGenre(id);
+        return true;
+    }
+
+    public boolean updateGenre(Genre genre) {
+        genreService.updateGenre(genre);
+        return true;
     }
 }

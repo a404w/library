@@ -3,77 +3,92 @@ schema {
   mutation: Mutation
 }
 
+# -----------------------------
+# QUERIES
+# -----------------------------
 type Query {
-  # Bücher
-  books: [Book!]!
-  bookById(id: ID!): Book
-  booksByGenre(id: ID!): [Book!]!
-  booksByAuthor(id: ID!): [Book!]!
+  # -- Bücher
+  getBooks: [Book!]!
+  getBookById(id: ID!): Book
+  getBooksByGenreId(id: ID!): [Book!]!
+  getBooksByAuthorId(id: ID!): [Book!]!
 
-  # Nutzer
-  users: [User!]!
-  userById(id: ID!): User
-  userByName(name: String!): User
+  # -- Benutzer
+  getUsers: [User!]!
+  getUserById(id: ID!): User
+  getUserByName(name: String!): User
 
-  # Ausleihen (Loans)
-  loans: [Loan!]!
-  loanById(id: ID!): Loan
-  loansByUser(userId: ID!): [Loan!]!
+  # -- Ausleihen (Loans)
+  getLoans: [Loan!]!
+  getLoanById(id: ID!): Loan
+  getLoansByUser(userId: ID!): [Loan!]!
+  getLoansByBook(bookId: ID!): [Loan!]!
 
-  # Autoren
-  authors: [Author!]!
-  authorById(id: ID!): Author
-  authorsByName(name: String!): [Author!]!
+  # -- Autoren
+  getAllAuthors: [Author!]!
+  getAuthorById(id: ID!): Author
+  getAuthorsByName(name: String!): [Author!]!
 
-  # Genres
-  genres: [Genre!]!
-  genreById(id: ID!): Genre
-  genresByName(name: String!): [Genre!]!
+  # -- Genres
+  getAllGenres: [Genre!]!
+  getGenreById(id: ID!): Genre
+  getGenresByName(name: String!): Genre
+
+  # -- Reservationen
+  getAllReservations: [Reservation!]!
+  getReservationById(id: ID!): Reservation
+  getReservationsByUser(userId: ID!): [Reservation!]!
+  getReservationByBook(bookId: ID!): [Reservation!]!
 }
 
+# -----------------------------
+# MUTATIONS
+# -----------------------------
 type Mutation {
-  # Bücher
+  # -- Bücher
   addBook(book: BookInput!): Book
   updateBook(book: BookInput!): Boolean
   deleteBook(id: ID!): Boolean
 
-  # Loans
+  # -- Ausleihen
   addLoan(book: BookInput!, user: UserInput!): Loan
   deleteLoan(id: ID!): Boolean
   updateLoan(loan: LoanInput!): Boolean
 
-  # Reservation
+  # -- Reservationen
   addReservation(book: BookInput!, user: UserInput!): Reservation
   deleteReservation(id: ID!): Boolean
   updateReservation(reservation: ReservationInput!): Boolean
 
-  # Nutzer
+  # -- User
   addUser(name: String!, email: String!): User
   updateUser(user: UserInput!): Boolean
   deleteUser(id: ID!): Boolean
 
-  #  Autoren
+  # -- Autoren
   addAuthor(name: String!): Author
   updateAuthor(author: AuthorInput!): Boolean
   deleteAuthor(id: ID!): Boolean
 
-  #  Genres
+  # -- Genres
   addGenre(genrename: String!, beschreibung: String!): Genre
   updateGenre(genre: GenreInput!): Boolean
   deleteGenre(id: ID!): Boolean
 }
 
-# Book-Modell
+# ----------------------------------------------------------------------------
+# OUTPUT-Typen (werden von Queries/Mutations zurückgegeben)
+# ----------------------------------------------------------------------------
+
 type Book {
   id: ID!
   title: String!
   isbn: String!
-  genre: Genre!
+  genres: [Genre!]!
   authors: [Author!]!
   isAvailable: Boolean!
 }
 
-# User-Modell
 type User {
   id: ID!
   name: String!
@@ -81,7 +96,6 @@ type User {
   borrowedBooks: [Book!]!
 }
 
-# Loan-Modell
 type Loan {
   id: ID!
   book: Book!
@@ -90,7 +104,6 @@ type Loan {
   to: String!
 }
 
-# Reservation-Modell
 type Reservation {
   id: ID!
   user: User!
@@ -98,14 +111,12 @@ type Reservation {
   reservationDate: String!
 }
 
-# Author-Modell
 type Author {
   id: ID!
   name: String!
   books: [Book!]!
 }
 
-# Genre-Modell
 type Genre {
   id: ID!
   genrename: String!
@@ -113,14 +124,23 @@ type Genre {
   books: [Book!]!
 }
 
-# Input-Typen für Mutations
+# ----------------------------------------------------------------------------
+# INPUT-Typen (werden in Mutations als Argumente benutzt)
+# ----------------------------------------------------------------------------
+
+"""
+BookInput wird in addBook(book: BookInput!) usw. verwendet.
+So kann 'book' bei der Mutation kein 'type Book' mehr sein,
+sondern korrekt ein Input-Objekt.
+"""
 input BookInput {
   id: ID
   title: String!
   isbn: String!
-  genre: String!
-  authors: [String!]!
   isAvailable: Boolean!
+  # Falls du Genres/Authors hier direkt setzen willst, könntest du auch:
+  # genres: [GenreInput!]
+  # authors: [AuthorInput!]
 }
 
 input UserInput {
@@ -131,17 +151,17 @@ input UserInput {
 
 input LoanInput {
   id: ID
-  book: BookInput!
-  user: UserInput!
   from: String!
   to: String!
+  book: BookInput!
+  user: UserInput!
 }
 
 input ReservationInput {
   id: ID
-  user: UserInput!
-  book: BookInput!
   reservationDate: String!
+  book: BookInput!
+  user: UserInput!
 }
 
 input AuthorInput {

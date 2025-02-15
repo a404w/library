@@ -1,4 +1,4 @@
-package de.thws.fiw.bs.library.application.graphql;
+/*package de.thws.fiw.bs.library.application.graphql;
 
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
@@ -115,3 +115,4 @@ public class GraphQLHandler {
     }
     
 }
+*/

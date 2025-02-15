@@ -1,6 +1,5 @@
 package de.thws.fiw.bs.library.application.graphql;
 
-import de.thws.fiw.bs.library.application.graphql.GraphQLHandler;
 import graphql.schema.GraphQLSchema;
 import org.junit.jupiter.api.Test;
 
