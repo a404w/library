@@ -18,51 +18,88 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(User user) {
         String sql = "INSERT INTO users (name, email) VALUES (?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getEmail());
-            stmt.executeUpdate();
+        try {
+            connection.setAutoCommit(false); // Transaktion starten
 
-            // Set generated ID
-            ResultSet generatedKeys = stmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                user.setId(generatedKeys.getLong(1));
+            try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setString(1, user.getName());
+                stmt.setString(2, user.getEmail());
+                stmt.executeUpdate();
+
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    user.setId(generatedKeys.getLong(1));
+                }
+
+                saveBorrowedBooks(user); // Bücher speichern
+                connection.commit(); // Transaktion abschließen
+                return user;
+            } catch (SQLException e) {
+                connection.rollback(); // Falls ein Fehler auftritt, alles zurücksetzen
+                throw e;
             }
-
-            // Save borrowed books
-            saveBorrowedBooks(user);
-            return user;
         } catch (SQLException e) {
             throw new RuntimeException("Fehler beim Speichern des Benutzers", e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ignored) {
+            }
         }
     }
 
     @Override
     public void update(User user) {
         String sql = "UPDATE users SET name = ?, email = ? WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getEmail());
-            stmt.setLong(3, user.getId());
-            stmt.executeUpdate();
+        try {
+            connection.setAutoCommit(false);
 
-            // Update borrowed books
-            deleteBorrowedBooks(user.getId());
-            saveBorrowedBooks(user);
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, user.getName());
+                stmt.setString(2, user.getEmail());
+                stmt.setLong(3, user.getId());
+                stmt.executeUpdate();
+
+                deleteBorrowedBooks(user.getId());
+                saveBorrowedBooks(user);
+
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Fehler beim Aktualisieren des Benutzers", e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ignored) {
+            }
         }
     }
 
     @Override
     public void delete(Long id) {
         String sql = "DELETE FROM users WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, id);
-            stmt.executeUpdate();
-            deleteBorrowedBooks(id); // Remove book relations
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setLong(1, id);
+                stmt.executeUpdate();
+                deleteBorrowedBooks(id);
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Fehler beim Löschen des Benutzers", e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ignored) {
+            }
         }
     }
 
@@ -73,14 +110,21 @@ public class UserRepositoryImpl implements UserRepository {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new User( 
-                    rs.getString("name"), 
-                    rs.getString("email"), 
-                    getBorrowedBooks(id)
-                );
+                Long userId = rs.getLong("id");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+
+                System.out.println("Benutzer gefunden: " + userId + ", " + name);
+
+                User user = new User(name, email, getBorrowedBooks(userId));
+                user.setId(userId);
+
+                return user;
+            } else {
+                System.out.println("Kein Benutzer mit ID " + id + " gefunden.");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Abrufen des Benutzers", e);
+            throw new RuntimeException("Fehler beim Abrufen des Benutzers mit ID " + id, e);
         }
         return null;
     }
@@ -89,18 +133,24 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users";
+
         try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                ResultSet rs = stmt.executeQuery(sql)) {
+
             while (rs.next()) {
-                users.add(new User(
-                    rs.getString("name"), 
-                    rs.getString("email"), 
-                    getBorrowedBooks(rs.getLong("id"))
-                ));
+                Long id = rs.getLong("id");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+
+                User user = new User(name, email);
+                user.setId(id);
+                users.add(user);
             }
+
         } catch (SQLException e) {
             throw new RuntimeException("Fehler beim Abrufen aller Benutzer", e);
         }
+
         return users;
     }
 
@@ -111,11 +161,10 @@ public class UserRepositoryImpl implements UserRepository {
             stmt.setString(1, name);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new User( 
-                    rs.getString("name"), 
-                    rs.getString("email"), 
-                    getBorrowedBooks(rs.getLong("id"))
-                );
+                Long userId = rs.getLong("id");
+                User user = new User(rs.getString("name"), rs.getString("email"), getBorrowedBooks(userId));
+                user.setId(userId);
+                return user;
             }
         } catch (SQLException e) {
             throw new RuntimeException("Fehler beim Abrufen des Benutzers nach Name", e);
@@ -124,9 +173,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private void saveBorrowedBooks(User user) throws SQLException {
-        if (user.getBorrowedBooks() == null || user.getBorrowedBooks().isEmpty()) return;
+        if (user.getBorrowedBooks() == null || user.getBorrowedBooks().isEmpty())
+            return;
 
-        String sql = "INSERT INTO user_books (user_id, book_id) VALUES (?, ?)";
+        String sql = "INSERT INTO borrowed_books (user_id, book_id) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Book book : user.getBorrowedBooks()) {
                 stmt.setLong(1, user.getId());
@@ -137,7 +187,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private void deleteBorrowedBooks(Long userId) throws SQLException {
-        String sql = "DELETE FROM user_books WHERE user_id = ?";
+        String sql = "DELETE FROM borrowed_books WHERE user_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setLong(1, userId);
             stmt.executeUpdate();
@@ -147,16 +197,15 @@ public class UserRepositoryImpl implements UserRepository {
     private Set<Book> getBorrowedBooks(Long userId) throws SQLException {
         Set<Book> books = new HashSet<>();
         String sql = "SELECT b.id, b.title, b.isbn, b.is_available FROM books b " +
-                     "JOIN user_books ub ON b.id = ub.book_id WHERE ub.user_id = ?";
+                "JOIN borrowed_books ub ON b.id = ub.book_id WHERE ub.user_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setLong(1, userId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                books.add(new Book( 
-                    rs.getString("title"), 
-                    rs.getString("isbn"), 
-                    null, null, rs.getBoolean("is_available")
-                ));
+                Book book = new Book(rs.getString("title"), rs.getString("isbn"), null, null,
+                        rs.getBoolean("is_available"));
+                book.setId(rs.getLong("id"));
+                books.add(book);
             }
         }
         return books;
